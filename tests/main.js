@@ -7,6 +7,7 @@
       tests: '../../tests',
       mocha: '../lib/mocha/mocha',
       chai: '../lib/mocha/chai',
+      utils: '../../tests/testutils'
     },
     shim: {
       mocha: {
