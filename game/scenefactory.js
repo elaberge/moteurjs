@@ -1,10 +1,11 @@
-define(() => {
+define(['objectfactory'], (ObjectFactory) => {
   'use strict';
 
   return function(sceneManager, objectFactory) {
     if (!sceneManager) {
       throw new Error('sceneManager ne peut être vide!');
     }
+    objectFactory = objectFactory || new ObjectFactory();
 
     this.append = function(descr) {
       let objects = [];
@@ -31,11 +32,14 @@ define(() => {
       }
 
       function callFn(fnName, methodCalls, o) {
-        if (!o.obj[fnName]) {
-          return;
-        }
+        for (let compName in o.obj) {
+          let comp = o.obj[compName];
+          if (!comp[fnName]) {
+            continue;
+          }
 
-        methodCalls.push(o.obj[fnName](o.descr));
+          methodCalls.push(comp[fnName](o.descr[compName]));
+        }
       }
       const callLoad = callFn.bind(this, 'onLoad');
       const callInit = callFn.bind(this, 'onInit');

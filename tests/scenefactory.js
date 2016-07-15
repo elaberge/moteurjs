@@ -18,10 +18,12 @@ define(['utils', 'scenefactory'], (utils, SceneFactory) => {
     it('fonction append ajoute des objets à la scène', (done) => {
       let descr = [{
         name: 'a',
-        val: 1
+        val: 1,
+        test: 'patate'
       }, {
         name: 'b',
-        val: 2
+        val: 2,
+        test: 'frite'
       }, ];
       let objStep = 0;
 
@@ -31,24 +33,26 @@ define(['utils', 'scenefactory'], (utils, SceneFactory) => {
           return Promise.resolve({
             name: descr.name,
             val: descr.val,
-            onLoad: function(d) {
-              expect((objStep == 2) || (objStep == 3)).to.be.true;
-              expect(d).equals(descr);
-              objStep++;
-              return delayPromise(10)
-                .then(() => {
-                  this._load = true;
-                });
-            },
-            onInit: function(d) {
-              expect((objStep == 4) || (objStep == 5)).to.be.true;
-              expect(d).equals(descr);
-              expect(this._load).to.be.true;
-              objStep++;
-              return delayPromise(10)
-                .then(() => {
-                  this._init = true;
-                });
+            test: {
+              onLoad: function(d) {
+                expect((objStep == 2) || (objStep == 3)).to.be.true;
+                expect(d).equals(descr.test);
+                objStep++;
+                return delayPromise(10)
+                  .then(() => {
+                    this._load = true;
+                  });
+              },
+              onInit: function(d) {
+                expect((objStep == 4) || (objStep == 5)).to.be.true;
+                expect(d).equals(descr.test);
+                expect(this._load).to.be.true;
+                objStep++;
+                return delayPromise(10)
+                  .then(() => {
+                    this._init = true;
+                  });
+              },
             },
           });
         },
@@ -66,10 +70,10 @@ define(['utils', 'scenefactory'], (utils, SceneFactory) => {
         .then(() => {
           const objects = sceneMgr.objects;
           expect(objects).have.keys(['a', 'b']);
-          expect(objects.a._load).to.be.true;
-          expect(objects.b._load).to.be.true;
-          expect(objects.a._init).to.be.true;
-          expect(objects.b._init).to.be.true;
+          expect(objects.a.test._load).to.be.true;
+          expect(objects.b.test._load).to.be.true;
+          expect(objects.a.test._init).to.be.true;
+          expect(objects.b.test._init).to.be.true;
           expect(objStep).equals(6);
           done();
         })
