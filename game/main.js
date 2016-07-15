@@ -9,8 +9,9 @@ define(['gameloop'], (GameLoop) => {
 
   let loop = new GameLoop();
 
-  function infiniteLoop() {
-    return loop.iterate()
+  function infiniteLoop(delta) {
+    delta = delta || 0;
+    return loop.iterate(delta)
       .then(requestAnimationFrame)
       .then(infiniteLoop);
   }

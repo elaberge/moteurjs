@@ -14,8 +14,6 @@ define(['utils', 'scenemanager'], (utils, SceneManager) => {
       let mgr = new SceneManager();
       expect(mgr).property('name');
       expect(mgr.name).equal('sceneManager');
-      expect(mgr).respondTo('load');
-      expect(mgr).respondTo('init');
       expect(mgr).respondTo('update');
       expect(mgr).respondTo('destroy');
     });
@@ -28,6 +26,58 @@ define(['utils', 'scenemanager'], (utils, SceneManager) => {
       expect(mgr).respondTo('addObject');
       expect(mgr).respondTo('findObject');
       expect(mgr).respondTo('findObjects');
+    });
+
+    it('fonction update se propage aux composants de la scène', (done) => {
+      let obj1 = {
+        c1: {
+          update: function(delta) {
+            return delayPromise(10)
+              .then(() => {
+                this.delta = delta;
+              });
+          },
+        },
+        c2: {
+          update: function(delta) {
+            return delayPromise(10)
+              .then(() => {
+                this.delta = delta;
+              });
+          },
+        },
+      };
+      let obj2 = {
+        c1: {
+          update: function(delta) {
+            return delayPromise(10)
+              .then(() => {
+                this.delta = delta;
+              });
+          },
+        },
+        c2: {
+          update: function(delta) {
+            return delayPromise(10)
+              .then(() => {
+                this.delta = delta;
+              });
+          },
+        },
+      };
+
+      let mgr = new SceneManager();
+      mgr.addObject(obj1);
+      mgr.addObject(obj2);
+      mgr.update(123)
+        .then(() => {
+          expect(obj1.c1.delta).equals(123);
+          expect(obj1.c2.delta).equals(123);
+          expect(obj2.c1.delta).equals(123);
+          expect(obj2.c2.delta).equals(123);
+          done();
+        })
+        .catch(done);
     });
 
     it('fonction appendScene ajoute des objets à la scène courante', (done) => {

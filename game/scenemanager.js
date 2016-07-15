@@ -8,11 +8,26 @@ define(['scenefactory'], (SceneFactory) => {
     let nameMap = {};
     let nextObjId = 1;
 
-    this.load = function() {};
+    this.update = function(delta) {
+      let updateCalls = [];
 
-    this.init = function() {};
+      function updateComp(obj, compName) {
+        const comp = obj[compName];
+        if (comp.update) {
+          updateCalls.push(comp.update(delta));
+        }
+      }
 
-    this.update = function() {};
+      function updateObj(objId) {
+        const obj = sceneObjects[objId];
+        const updateObjComp = updateComp.bind(this, obj);
+        Object.keys(obj).forEach(updateObjComp);
+      }
+
+      Object.keys(sceneObjects).forEach(updateObj);
+
+      return Promise.all(updateCalls);
+    };
 
     this.destroy = function() {};
 

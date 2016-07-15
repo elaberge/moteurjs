@@ -18,11 +18,13 @@ define(() => {
       }
     }
 
-    function runOnModules(fnName) {
+    function runOnModules(fnName, ...args) {
+      args.push(moduleMap);
+
       let moduleCalls = [];
       modules.forEach((m) => {
         if (m[fnName]) {
-          moduleCalls.push(m[fnName](moduleMap));
+          moduleCalls.push(m[fnName].apply(m, args));
         }
       });
       return Promise.all(moduleCalls);
@@ -46,8 +48,8 @@ define(() => {
       return runSequence(['load', 'init']);
     };
 
-    this.iterate = function() {
-      return runOnModules('update');
+    this.iterate = function(delta) {
+      return runOnModules('update', delta);
     };
 
     this.quit = function() {

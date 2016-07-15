@@ -87,7 +87,8 @@ define(['utils', 'gameloop'], (utils, GameLoop) => {
 
       let mod1 = {
         name: 'a',
-        update: function(modMap) {
+        update: function(delta, modMap) {
+          expect(delta).equals(123);
           expect(modMap).deep.equal(moduleMap);
           calls.push(this);
           return delayPromise(10).then(() => {
@@ -97,7 +98,8 @@ define(['utils', 'gameloop'], (utils, GameLoop) => {
       };
       let mod2 = {
         name: 'b',
-        update: function(modMap) {
+        update: function(delta, modMap) {
+          expect(delta).equals(123);
           expect(modMap).deep.equal(moduleMap);
           calls.push(this);
           return delayPromise(10).then(() => {
@@ -120,7 +122,7 @@ define(['utils', 'gameloop'], (utils, GameLoop) => {
       expect(loop.modules).to.be.empty;
       loop.init([mod1, mod2])
         .then(() => {
-          return loop.iterate();
+          return loop.iterate(123);
         })
         .then(() => {
           expect(mod1._update).to.be.true;
