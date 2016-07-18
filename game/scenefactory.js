@@ -5,7 +5,7 @@ define(['objectfactory'], (ObjectFactory) => {
     if (!sceneManager) {
       throw new Error('sceneManager ne peut être vide!');
     }
-    objectFactory = objectFactory || new ObjectFactory();
+    objectFactory = objectFactory || new ObjectFactory(sceneManager);
 
     this.append = function(descr) {
       let objects = [];
@@ -34,7 +34,7 @@ define(['objectfactory'], (ObjectFactory) => {
       function callFn(fnName, methodCalls, o) {
         for (let compName in o.obj) {
           let comp = o.obj[compName];
-          if (!comp[fnName]) {
+          if (!comp || !comp[fnName]) {
             continue;
           }
 

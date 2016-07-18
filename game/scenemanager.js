@@ -13,7 +13,7 @@ define(['scenefactory'], (SceneFactory) => {
 
       function updateComp(obj, compName) {
         const comp = obj[compName];
-        if (comp.update) {
+        if (comp && comp.update) {
           updateCalls.push(comp.update(delta));
         }
       }
@@ -49,9 +49,10 @@ define(['scenefactory'], (SceneFactory) => {
     this.addObject = function(obj) {
       const id = nextObjId++;
       sceneObjects[id] = obj;
-      if (obj.name) {
-        nameMap[obj.name] = nameMap[obj.name] || new Set();
-        nameMap[obj.name].add(id);
+      const nameComp = obj.name;
+      if (nameComp) {
+        nameMap[nameComp.name] = nameMap[nameComp.name] || new Set();
+        nameMap[nameComp.name].add(id);
       }
       return id;
     };
@@ -82,7 +83,7 @@ define(['scenefactory'], (SceneFactory) => {
 
     Object.defineProperty(this, 'name', {
       enumerable: true,
-      value: 'sceneManager'
+      value: 'sceneManager',
     });
 
     Object.defineProperty(this, 'objects', {

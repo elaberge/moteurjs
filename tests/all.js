@@ -1,7 +1,15 @@
 define([
+  'tests/utils',
   'tests/gameloop',
   'tests/scenemanager',
   'tests/scenefactory',
   'tests/objectfactory',
+  'tests/renderer',
   'tests/componentfactory',
+  'tests/components/name',
+  'tests/components/parent',
+  'tests/components/transform',
+  'tests/components/canvas2d',
+  'tests/components/shape2d',
+  'tests/components/text2d',
 ]);

@@ -1,0 +1,101 @@
+[
+  {
+    "name": "canvas",
+    "transform": {
+      "width": 512,
+      "height": 384
+    },
+    "canvas2d": {
+      "htmlTarget": "canvas",
+      "background": "#000"
+    }
+  },
+  {
+    "name": "background",
+    "parent": "canvas",
+    "transform": {},
+    "shape2d": {
+      "fill": "#fff",
+      "stroke": "#fff",
+      "lineWidth": 4,
+      "lineDash": [16, 4],
+      "path": "m 256,0 v 384"
+    }
+  },
+  {
+    "name": "ball",
+    "parent": "background",
+    "transform": {
+      "x": 256,
+      "y": 192,
+      "width": 32,
+      "height": 32
+    },
+    "shape2d": {
+      "fill": "#fff",
+      "stroke": "#fff",
+      "path": "m -16,0 a 16,16 0 1,1 32,0 a 16,16 0 1,1 -32,0 z"
+    }
+  },
+  {
+    "name": "paddle1",
+    "parent": "background",
+    "transform": {
+      "x": 16,
+      "y": 192,
+      "width": 32,
+      "height": 128
+    },
+    "shape2d": {
+      "fill": "#fff",
+      "stroke": "#fff",
+      "path": "m -16,-64 h 32 v 128 h -32 z"
+    }
+  },
+  {
+    "name": "paddle2",
+    "parent": "background",
+    "transform": {
+      "x": 496,
+      "y": 192,
+      "width": 32,
+      "height": 128
+    },
+    "shape2d": {
+      "fill": "#fff",
+      "stroke": "#fff",
+      "path": "m -16,-64 h 32 v 128 h -32 z"
+    }
+  },
+  {
+    "name": "score1",
+    "parent": "background",
+    "transform": {
+      "x": 128,
+      "y": 16
+    },
+    "text2d": {
+      "text": "0",
+      "align": "center",
+      "baseline": "top",
+      "font": "64px Impact, Charcoal, sans-serif",
+      "filled": true
+    }
+  },
+  {
+    "name": "score2",
+    "parent": "background",
+    "transform": {
+      "x": 384,
+      "y": 16
+    },
+    "text2d": {
+      "text": "0",
+      "align": "center",
+      "baseline": "top",
+      "font": "64px Impact, Charcoal, sans-serif",
+      "filled": true
+    }
+  }
+
+]

@@ -1,4 +1,4 @@
-define(['utils', 'scenemanager'], (utils, SceneManager) => {
+define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, SceneManager) => {
   'use strict';
 
   const expect = utils.expect;
@@ -84,21 +84,27 @@ define(['utils', 'scenemanager'], (utils, SceneManager) => {
       let descr = {
         a: 1
       };
+      let mgr;
       let sceneFactory = {
         append: (d, sceneMgr) => {
           expect(d).equals(descr);
+          let obj = {
+            val: true
+          };
+
           return delayPromise(10)
             .then(() => {
-              sceneMgr.addObject({
-                name: ['obj' + d.a],
-                val: true
-              });
+              return NameComponent.create(mgr, obj, 'obj' + d.a);
+            })
+            .then((nameComp) => {
+              obj.name = nameComp;
+              sceneMgr.addObject(obj);
               d.a++;
             });
         },
       };
 
-      let mgr = new SceneManager(sceneFactory);
+      mgr = new SceneManager(sceneFactory);
       expect(mgr.objects).to.be.empty;
       mgr.appendScene(descr)
         .then(() => {
@@ -122,21 +128,29 @@ define(['utils', 'scenemanager'], (utils, SceneManager) => {
     });
 
     it('fonction unloadScene supprime tous les objets de la scène courante', (done) => {
+      let mgr;
       let sceneFactory = {
         append: (d, sceneMgr) => {
-          sceneMgr.addObject({
-            name: 'a',
+          let objA = {
             val: true
-          });
-          sceneMgr.addObject({
-            name: 'b',
+          };
+          let objB = {
             val: true
-          });
-          return Promise.resolve();
+          };
+          return NameComponent.create(mgr, objA, 'a')
+            .then((aName) => {
+              objA.name = aName;
+              sceneMgr.addObject(objA);
+              return NameComponent.create(mgr, objB, 'b');
+            })
+            .then((bName) => {
+              objB.name = bName;
+              sceneMgr.addObject(objB);
+            });
         },
       };
 
-      let mgr = new SceneManager(sceneFactory);
+      mgr = new SceneManager(sceneFactory);
       mgr.appendScene(null)
         .then(() => {
           expect(Object.keys(mgr.objects)).lengthOf(2);
@@ -153,21 +167,27 @@ define(['utils', 'scenemanager'], (utils, SceneManager) => {
       let descr = {
         a: 1
       };
+      let mgr;
       let sceneFactory = {
         append: (d, sceneMgr) => {
           expect(d).equals(descr);
+          let obj = {
+            val: true
+          };
+
           return delayPromise(10)
             .then(() => {
-              sceneMgr.addObject({
-                name: ['obj' + d.a],
-                val: true
-              });
+              return NameComponent.create(mgr, obj, 'obj' + d.a);
+            })
+            .then((nameComp) => {
+              obj.name = nameComp;
+              sceneMgr.addObject(obj);
               d.a++;
             });
         },
       };
 
-      let mgr = new SceneManager(sceneFactory);
+      mgr = new SceneManager(sceneFactory);
       expect(mgr.objects).to.be.empty;
       mgr.appendScene(descr)
         .then(() => {

@@ -1,8 +1,11 @@
 define(['componentfactory'], (ComponentFactory) => {
   'use strict';
 
-  return function(componentFactory) {
-    componentFactory = componentFactory || new ComponentFactory();
+  return function(sceneManager, componentFactory) {
+    if (!sceneManager) {
+      throw new Error('sceneManager ne peut être vide!');
+    }
+    componentFactory = componentFactory || new ComponentFactory(sceneManager);
 
     this.create = function(descr) {
       let components = [];
@@ -10,7 +13,7 @@ define(['componentfactory'], (ComponentFactory) => {
 
       function addComponent(compName) {
         let compDescr = descr[compName];
-        let p = componentFactory.create(compName, compDescr)
+        let p = componentFactory.create(newObj, compName, compDescr)
           .then((comp) => {
             newObj[compName] = comp;
           });

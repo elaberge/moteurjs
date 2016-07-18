@@ -1,13 +1,17 @@
-define(['require'], (require) => {
+define(['utils'], (utils) => {
   'use strict';
 
-  return function() {
-    this.create = function(name, descr) {
-      return new Promise((resolve, reject) => {
-        require([name], (comp) => {
-          resolve(comp.create(descr));
-        }, reject);
-      });
+  return function(sceneManager, componentRoot) {
+    if (!sceneManager) {
+      throw new Error('sceneManager ne peut être vide!');
+    }
+    componentRoot = componentRoot || 'components';
+
+    this.create = function(owner, name, descr) {
+      return utils.require([componentRoot + '/' + name])
+        .then((comp) => {
+          return comp.create(sceneManager, owner, descr);
+        });
     };
   };
 });

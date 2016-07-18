@@ -1,4 +1,4 @@
-define(['utils', 'gameloop'], (utils, GameLoop) => {
+define(['testutils', 'gameloop'], (utils, GameLoop) => {
   'use strict';
 
   const expect = utils.expect;

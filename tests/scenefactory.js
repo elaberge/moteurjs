@@ -1,4 +1,4 @@
-define(['utils', 'scenefactory'], (utils, SceneFactory) => {
+define(['testutils', 'scenefactory'], (utils, SceneFactory) => {
   'use strict';
 
   const expect = utils.expect;
