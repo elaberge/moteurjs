@@ -4,25 +4,43 @@ define(['testutils', 'components/name'], (utils, NameComponent) => {
   const expect = utils.expect;
 
   describe('Composant "Name"', () => {
-    it('possède les fonctions et propriétés néceassaires', () => {
-      expect(NameComponent).respondTo('create');
-    });
+    describe('Fonction "create"', () => {
+      it('existe', () => {
+        expect(NameComponent).respondTo('create');
+      });
 
-    it('fonction create crée le composant correctement', (done) => {
-      let descr = 'test component';
-      let obj = {
-        a: 123
-      };
-
-      NameComponent.create(null, obj, descr)
-        .then((comp) => {
+      const tests = [{
+        name: 'assigne la propriété "owner"',
+        descr: {},
+        check: function(obj, comp) {
           expect(comp).property('owner');
           expect(comp.owner).equals(obj);
+          return Promise.resolve();
+        }
+      }, {
+        name: 'assigne le nom de l\'objet',
+        descr: 'test component',
+        check: function(obj, comp) {
           expect(comp).property('name');
-          expect(comp.name).equals(descr);
-          done();
-        })
-        .catch(done);
+          expect(comp.name).equals(this.descr);
+          return Promise.resolve();
+        }
+      }];
+
+      tests.forEach((t) => {
+        it(t.name, (done) => {
+          let obj = {
+            a: 123
+          };
+
+          NameComponent.create(null, obj, t.descr)
+            .then((comp) => {
+              return t.check(obj, comp);
+            })
+            .then(done)
+            .catch(done);
+        });
+      });
     });
   });
 });

@@ -10,64 +10,68 @@ define(['testutils', 'renderer', 'scenemanager'], (utils, Renderer, SceneManager
       expect(renderer).instanceof(Renderer);
     });
 
-    it('possède les fonctions et propriétés d\'un sous-système', () => {
+    it('a un nom', () => {
       let renderer = new Renderer({});
       expect(renderer).property('name');
       expect(renderer.name).equal('renderer');
-      expect(renderer).respondTo('update');
     });
 
-    it('fonction update exécute les fonctions render des composants de la scène', (done) => {
-      let obj1 = {
-        c1: {
-          render: function(delta) {
-            return delayPromise(10)
-              .then(() => {
-                this.delta = delta;
-              });
-          },
-        },
-        c2: {
-          render: function(delta) {
-            return delayPromise(10)
-              .then(() => {
-                this.delta = delta;
-              });
-          },
-        },
-      };
-      let obj2 = {
-        c1: {
-          render: function(delta) {
-            return delayPromise(10)
-              .then(() => {
-                this.delta = delta;
-              });
-          },
-        },
-        c2: {
-          render: function(delta) {
-            return delayPromise(10)
-              .then(() => {
-                this.delta = delta;
-              });
-          },
-        },
-      };
+    describe('Fonction "update"', () => {
+      it('existe', () => {
+        let renderer = new Renderer({});
+        expect(renderer).respondTo('update');
+      });
 
-      let mgr = new SceneManager();
-      let renderer = new Renderer(mgr);
-      mgr.addObject(obj1);
-      mgr.addObject(obj2);
-      renderer.update(123)
-        .then(() => {
-          expect(obj1.c1.delta).equals(123);
-          expect(obj1.c2.delta).equals(123);
-          expect(obj2.c1.delta).equals(123);
-          expect(obj2.c2.delta).equals(123);
-          done();
-        })
-        .catch(done);
+      const tests = [{
+        name: 'exécute les fonctions de rendu des composants de la scène',
+        check: function(renderer, objects) {
+          return renderer.update(123)
+            .then(() => {
+              expect(objects).have.lengthOf(2);
+              objects.forEach((o) => {
+                expect(o.c1.delta).equals(123);
+                expect(o.c2.delta).equals(123);
+              });
+            });
+        },
+      }, ];
+
+      tests.forEach((t) => {
+        it(t.name, (done) => {
+          function objectRender(delta) {
+            return delayPromise(10)
+              .then(() => {
+                this.delta = delta;
+              });
+          }
+
+          let objects = [{
+            c1: {
+              render: objectRender,
+            },
+            c2: {
+              render: objectRender,
+            },
+          }, {
+            c1: {
+              render: objectRender,
+            },
+            c2: {
+              render: objectRender,
+            },
+          }];
+
+          let mgr = new SceneManager();
+          let renderer = new Renderer(mgr);
+          objects.forEach((o) => {
+            mgr.addObject(o);
+          });
+
+          t.check(renderer, objects)
+            .then(done)
+            .catch(done);
+        });
+      });
     });
   });
 });

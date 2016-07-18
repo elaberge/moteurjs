@@ -29,8 +29,6 @@ define(['scenefactory'], (SceneFactory) => {
       return Promise.all(updateCalls);
     };
 
-    this.destroy = function() {};
-
     this.loadScene = function(descr) {
       let append = this.appendScene.bind(this, descr);
       return this.unloadScene()

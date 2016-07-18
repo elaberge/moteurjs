@@ -7,19 +7,23 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
   describe('Composant "Canvas2D"', () => {
     const canvasName = 'test canvas';
 
-    it('possède les fonctions et propriétés néceassaires', () => {
-      expect(CanvasComponent).respondTo('getHTMLElement');
-      expect(CanvasComponent).respondTo('create');
-    });
+    describe('Fonction "getHTMLElement"', () => {
+      it('existe', () => {
+        expect(CanvasComponent).respondTo('getHTMLElement');
+      });
 
-    it('fonction getHTMLElement récupère un élément HTML', () => {
-      let mochaElement = CanvasComponent.getHTMLElement('mocha');
-      expect(mochaElement).not.null;
-      expect(mochaElement).property('nodeName');
-      expect(mochaElement.nodeName.toLowerCase()).equals('div');
+      it('récupère un élément HTML', () => {
+        let mochaElement = CanvasComponent.getHTMLElement('mocha');
+        expect(mochaElement).not.null;
+        expect(mochaElement).property('nodeName');
+        expect(mochaElement.nodeName.toLowerCase()).equals('div');
+      });
     });
 
     function createTestCanvas(descr, owner, log) {
+      descr = descr || {
+        htmlTarget: canvasName
+      };
       owner = owner || {};
       log = log || [];
 
@@ -45,53 +49,73 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
         });
     }
 
-    it('fonction create crée le composant correctement', (done) => {
-      let obj = {
-        a: 123
-      };
-      let descr = {
-        htmlTarget: canvasName,
-      };
+    describe('Fonction "create"', () => {
+      it('existe', () => {
+        expect(CanvasComponent).respondTo('create');
+      });
 
-      createTestCanvas(descr, obj)
-        .then((comp) => {
-          expect(comp).property('owner');
-          expect(comp.owner).equals(obj);
-          expect(comp).property('context');
-          expect(comp.context).property('fillStyle');
-          done();
-        })
-        .catch(done);
+      it('crée le composant correctement', (done) => {
+        let obj = {
+          a: 123
+        };
+        let descr = {
+          htmlTarget: canvasName,
+        };
+
+        createTestCanvas(descr, obj)
+          .then((comp) => {
+            expect(comp).property('owner');
+            expect(comp.owner).equals(obj);
+            expect(comp).property('context');
+            expect(comp.context).property('fillStyle');
+            done();
+          })
+          .catch(done);
+      });
     });
 
-    it('fonction render remplit le canvas avec la couleur d\'arrière plan', (done) => {
-      let descr = {
-        htmlTarget: canvasName,
-        background: '#000',
-      };
+    describe('Fonction "render"', () => {
+      it('existe', (done) => {
+        createTestCanvas()
+          .then((comp) => {
+            expect(comp).respondTo('render');
+            done();
+          })
+          .catch(done);
+      });
 
-      let expectedCommands = [{
-        p: 'fillStyle',
-        t: 'set',
-        v: descr.background,
-      }, {
-        p: 'fillRect',
-        t: 'call',
-        a: [0, 0, 300, 150],
+      const tests = [{
+        name: 'remplit le canvas avec la couleur d\'arrière plan',
+        descr: {
+          background: '#000'
+        },
+        expected: [{
+          p: 'fillStyle',
+          t: 'set',
+          v: '#000',
+        }, {
+          p: 'fillRect',
+          t: 'call',
+          a: [0, 0, 300, 150],
+        }, ],
       }, ];
 
-      let log = [];
-      createTestCanvas(descr, {}, log)
-        .then((comp) => {
-          expect(comp).respondTo('render');
-          return comp.render(123);
-        })
-        .then(() => {
-          expect(log).have.lengthOf(2);
-          expect(log).deep.equals(expectedCommands);
-          done();
-        })
-        .catch(done);
+      tests.forEach((t) => {
+        it(t.name, (done) => {
+          t.descr.htmlTarget = canvasName;
+          let log = [];
+          createTestCanvas(t.descr, {}, log)
+            .then((comp) => {
+              return comp.render(123);
+            })
+            .then(() => {
+              expect(log).have.lengthOf(t.expected.length);
+              expect(log).deep.equals(t.expected);
+              done();
+            })
+            .catch(done);
+        });
+      });
     });
   });
 });
