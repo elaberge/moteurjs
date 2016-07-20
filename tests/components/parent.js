@@ -24,7 +24,24 @@ define(['testutils', 'components/parent'], (utils, ParentComponent) => {
           expect(comp).property('parent');
           expect(comp.parent).equals(parent);
           return Promise.resolve();
-        }
+        },
+      }, {
+        name: 'la propriété "children" du parent fait référence à cet objet',
+        descr: 'test parent',
+        loadCheck: function(obj, comp, parent) {
+          expect(parent).property('children');
+          expect(parent.children).an('object');
+          expect(parent.children).property('children');
+          expect(parent.children.children).an('array');
+          let found = false;
+          parent.children.children.forEach((c) => {
+            if (c === obj) {
+              found = true;
+            }
+          });
+          expect(found).to.be.true;
+          return Promise.resolve();
+        },
       }];
 
       tests.forEach((t) => {

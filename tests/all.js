@@ -8,6 +8,7 @@ define([
   'tests/componentfactory',
   'tests/components/name',
   'tests/components/parent',
+  'tests/components/children',
   'tests/components/transform',
   'tests/components/canvas2d',
   'tests/components/shape2d',
