@@ -3,6 +3,7 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
 
   const expect = utils.expect;
   const callLog = utils.callLog;
+  const delayPromise = utils.delayPromise;
 
   describe('Composant "Canvas2D"', () => {
     const canvasName = 'test canvas';
@@ -115,6 +116,66 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
             })
             .catch(done);
         });
+      });
+
+      it('appelle les méthodes "display" de ses enfants, récursivement', (done) => {
+        let displayLog = [];
+
+        function display(delta, ctx) {
+          displayLog.push(this.owner);
+          return delayPromise(10)
+            .then(() => {
+              this._delta = delta;
+              this._context = ctx;
+            });
+        }
+
+        let grandChild1 = {
+          name: 'grandChild1',
+          test: {
+            display: display
+          },
+        };
+        let child1 = {
+          name: 'child1',
+          test: {
+            display: display
+          },
+          children: {
+            children: [grandChild1]
+          },
+        };
+        let child2 = {
+          name: 'child2',
+          test: {
+            display: display
+          },
+        };
+        let obj = {
+          children: {
+            children: [child1, child2]
+          },
+        };
+        const expectedOrder = [child1, grandChild1, child2];
+        expectedOrder.forEach((o) => {
+          o.test.owner = o;
+        });
+
+        let context;
+        createTestCanvas(null, obj)
+          .then((comp) => {
+            context = comp.context;
+            return comp.render(123);
+          })
+          .then(() => {
+            expect(displayLog).deep.equals(expectedOrder);
+            expectedOrder.forEach((o) => {
+              expect(o.test._delta).equals(123);
+              expect(o.test._context).equals(context);
+            });
+            done();
+          })
+          .catch(done);
       });
     });
   });

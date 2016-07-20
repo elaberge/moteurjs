@@ -16,7 +16,6 @@
     "transform": {},
     "shape2d": {
       "fill": "#fff",
-      "stroke": "#fff",
       "lineWidth": 4,
       "lineDash": [16, 4],
       "path": "m 256,0 v 384"
@@ -33,7 +32,6 @@
     },
     "shape2d": {
       "fill": "#fff",
-      "stroke": "#fff",
       "path": "m -16,0 a 16,16 0 1,1 32,0 a 16,16 0 1,1 -32,0 z"
     }
   },
@@ -48,7 +46,6 @@
     },
     "shape2d": {
       "fill": "#fff",
-      "stroke": "#fff",
       "path": "m -16,-64 h 32 v 128 h -32 z"
     }
   },
@@ -63,7 +60,6 @@
     },
     "shape2d": {
       "fill": "#fff",
-      "stroke": "#fff",
       "path": "m -16,-64 h 32 v 128 h -32 z"
     }
   },
@@ -79,7 +75,7 @@
       "align": "center",
       "baseline": "top",
       "font": "64px Impact, Charcoal, sans-serif",
-      "filled": true
+      "fill": "#fff"
     }
   },
   {
@@ -94,7 +90,7 @@
       "align": "center",
       "baseline": "top",
       "font": "64px Impact, Charcoal, sans-serif",
-      "filled": true
+      "fill": "#fff"
     }
   }
 

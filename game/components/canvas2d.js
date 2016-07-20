@@ -39,10 +39,37 @@ define(() => {
           return Promise.resolve();
         },
 
-        render: function() {
+        render: function(delta) {
           commands.forEach((cmd) => {
             cmd();
           });
+
+          function displayRecursive() {
+            let p = Promise.resolve();
+            Object.keys(this).forEach((compName) => {
+              const comp = this[compName];
+              if (comp.display) {
+                p = p.then(() => {
+                    ctx.save();
+                    return comp.display(delta, ctx);
+                  })
+                  .then(() => {
+                    ctx.restore();
+                  });
+              }
+            });
+
+            if (this.children) {
+              this.children.children.forEach((c) => {
+                p = p.then(() => {
+                  return displayRecursive.apply(c);
+                });
+              });
+            }
+            return p;
+          }
+
+          return displayRecursive.apply(owner);
         },
       };
 
