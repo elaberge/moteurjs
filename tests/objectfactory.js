@@ -6,13 +6,13 @@ define(['testutils', 'objectfactory'], (utils, ObjectFactory) => {
 
   describe('Fabrique d\'objets', () => {
     it('peut être instanciée', () => {
-      let factory = new ObjectFactory({});
+      const factory = new ObjectFactory({});
       expect(factory).instanceof(ObjectFactory);
     });
 
     describe('Fonction "create"', () => {
       it('existe', () => {
-        let factory = new ObjectFactory({});
+        const factory = new ObjectFactory({});
         expect(factory).respondTo('create');
       });
 
@@ -53,7 +53,7 @@ define(['testutils', 'objectfactory'], (utils, ObjectFactory) => {
 
       tests.forEach((t) => {
         it(t.name, (done) => {
-          let compFactory = {
+          const compFactory = {
             create: (obj, compName, compDescr) => {
               return delayPromise(10)
                 .then(() => {
@@ -66,7 +66,7 @@ define(['testutils', 'objectfactory'], (utils, ObjectFactory) => {
             },
           };
 
-          let factory = new ObjectFactory({}, compFactory);
+          const factory = new ObjectFactory({}, compFactory);
           t.check(factory)
             .then(done)
             .catch(done);

@@ -6,35 +6,35 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
 
   describe('Gestionnaire de scènes', () => {
     it('peut être instancié', () => {
-      let mgr = new SceneManager();
+      const mgr = new SceneManager();
       expect(mgr).instanceof(SceneManager);
     });
 
     it('a un nom', () => {
-      let mgr = new SceneManager();
+      const mgr = new SceneManager();
       expect(mgr).property('name');
       expect(mgr.name).equal('sceneManager');
     });
 
     it('a la propriété "objects"', () => {
-      let mgr = new SceneManager();
+      const mgr = new SceneManager();
       expect(mgr).property('objects');
       expect(mgr.objects).an('object');
     });
 
     describe('Fonction "addObject"', () => {
       it('existe', () => {
-        let mgr = new SceneManager();
+        const mgr = new SceneManager();
         expect(mgr).respondTo('addObject');
       });
 
       const tests = [{
         name: 'ajoute un objet sans nom',
         check: function(mgr) {
-          let obj = {
+          const obj = {
             a: 123
           };
-          let id = mgr.addObject(obj);
+          const id = mgr.addObject(obj);
           expect(id).not.null;
           expect(mgr.objects).property(id);
           expect(mgr.objects[id]).equals(obj);
@@ -43,13 +43,13 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
       }, {
         name: 'ajoute un objet nommé',
         check: function(mgr) {
-          let obj = {
+          const obj = {
             a: 123
           };
           return NameComponent.create(mgr, obj, 'test')
             .then((comp) => {
               obj.name = comp;
-              let id = mgr.addObject(obj);
+              const id = mgr.addObject(obj);
               expect(id).not.null;
               expect(mgr.objects).property(id);
               expect(mgr.objects[id]).equals(obj);
@@ -60,7 +60,7 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
 
       tests.forEach((t) => {
         it(t.name, (done) => {
-          let mgr = new SceneManager();
+          const mgr = new SceneManager();
           t.check(mgr)
             .then(done)
             .catch(done);
@@ -70,7 +70,7 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
 
     describe('Fonction "findObject"', () => {
       it('existe', () => {
-        let mgr = new SceneManager();
+        const mgr = new SceneManager();
         expect(mgr).respondTo('findObject');
       });
 
@@ -83,7 +83,7 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
       }, {
         name: 'trouve un objet nommé',
         check: function(mgr) {
-          let obj = {
+          const obj = {
             a: 123
           };
           return NameComponent.create(mgr, obj, 'test')
@@ -96,10 +96,10 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
       }, {
         name: 'trouve un des objets nommés lorsque plusieurs partagent le même nom',
         check: function(mgr) {
-          let obj1 = {
+          const obj1 = {
             a: 123
           };
-          let obj2 = {
+          const obj2 = {
             b: 456
           };
           return NameComponent.create(mgr, obj1, 'test')
@@ -111,7 +111,7 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
             .then((comp) => {
               obj2.name = comp;
               mgr.addObject(obj2);
-              let found = mgr.findObject('test');
+              const found = mgr.findObject('test');
               expect(found === obj1 || found === obj2).true;
             });
         }
@@ -119,7 +119,7 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
 
       tests.forEach((t) => {
         it(t.name, (done) => {
-          let mgr = new SceneManager();
+          const mgr = new SceneManager();
           t.check(mgr)
             .then(done)
             .catch(done);
@@ -129,14 +129,14 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
 
     describe('Fonction "findObjects"', () => {
       it('existe', () => {
-        let mgr = new SceneManager();
+        const mgr = new SceneManager();
         expect(mgr).respondTo('findObjects');
       });
 
       const tests = [{
         name: 'renvoie un tableau vide si aucun objet n\'est trouvé',
         check: function(mgr) {
-          let found = mgr.findObjects('test');
+          const found = mgr.findObjects('test');
           expect(found).an('array');
           expect(found).have.lengthOf(0);
           return Promise.resolve();
@@ -144,14 +144,14 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
       }, {
         name: 'trouve un objet nommé',
         check: function(mgr) {
-          let obj = {
+          const obj = {
             a: 123
           };
           return NameComponent.create(mgr, obj, 'test')
             .then((comp) => {
               obj.name = comp;
               mgr.addObject(obj);
-              let found = mgr.findObjects('test');
+              const found = mgr.findObjects('test');
               expect(found).an('array');
               expect(found).have.lengthOf(1);
               expect(found[0]).equals(obj);
@@ -160,10 +160,10 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
       }, {
         name: 'trouve des objets nommés lorsque plusieurs partagent le même nom',
         check: function(mgr) {
-          let obj1 = {
+          const obj1 = {
             a: 123
           };
-          let obj2 = {
+          const obj2 = {
             b: 456
           };
           return NameComponent.create(mgr, obj1, 'test')
@@ -175,7 +175,7 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
             .then((comp) => {
               obj2.name = comp;
               mgr.addObject(obj2);
-              let found = mgr.findObjects('test');
+              const found = mgr.findObjects('test');
               expect(found).an('array');
               expect(found).have.lengthOf(2);
               expect(found).members([obj1, obj2]);
@@ -185,7 +185,7 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
 
       tests.forEach((t) => {
         it(t.name, (done) => {
-          let mgr = new SceneManager();
+          const mgr = new SceneManager();
           t.check(mgr)
             .then(done)
             .catch(done);
@@ -195,7 +195,7 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
 
     describe('Fonction "update"', () => {
       it('existe', () => {
-        let mgr = new SceneManager();
+        const mgr = new SceneManager();
         expect(mgr).respondTo('update');
       });
 
@@ -222,7 +222,7 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
               });
           }
 
-          let objects = [{
+          const objects = [{
             c1: {
               update: objectUpdate,
             },
@@ -238,7 +238,7 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
             },
           }];
 
-          let mgr = new SceneManager();
+          const mgr = new SceneManager();
           objects.forEach((o) => {
             mgr.addObject(o);
           });
@@ -252,7 +252,7 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
 
     describe('Fonction "appendScene"', () => {
       it('existe', () => {
-        let mgr = new SceneManager();
+        const mgr = new SceneManager();
         expect(mgr).respondTo('appendScene');
       });
 
@@ -294,14 +294,14 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
 
       tests.forEach((t) => {
         it(t.name, (done) => {
-          let descr = {
+          const descr = {
             a: 1
           };
-          let mgr;
-          let sceneFactory = {
+          let mgr = undefined;
+          const sceneFactory = {
             append: (d, sceneMgr) => {
               expect(d).equals(descr);
-              let obj = {
+              const obj = {
                 val: true
               };
 
@@ -327,7 +327,7 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
 
     describe('Fonction "unloadScene"', () => {
       it('existe', () => {
-        let mgr = new SceneManager();
+        const mgr = new SceneManager();
         expect(mgr).respondTo('unloadScene');
       });
 
@@ -347,13 +347,13 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
 
       tests.forEach((t) => {
         it(t.name, (done) => {
-          let mgr;
-          let sceneFactory = {
+          let mgr = undefined;
+          const sceneFactory = {
             append: (d, sceneMgr) => {
-              let objA = {
+              const objA = {
                 val: true
               };
-              let objB = {
+              const objB = {
                 val: true
               };
               return NameComponent.create(mgr, objA, 'a')
@@ -379,7 +379,7 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
 
     describe('Fonction "loadScene"', () => {
       it('existe', () => {
-        let mgr = new SceneManager();
+        const mgr = new SceneManager();
         expect(mgr).respondTo('loadScene');
       });
 
@@ -412,14 +412,14 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
 
       tests.forEach((t) => {
         it(t.name, (done) => {
-          let descr = {
+          const descr = {
             a: 1
           };
-          let mgr;
-          let sceneFactory = {
+          let mgr = undefined;
+          const sceneFactory = {
             append: (d, sceneMgr) => {
               expect(d).equals(descr);
-              let obj = {
+              const obj = {
                 val: true
               };
 

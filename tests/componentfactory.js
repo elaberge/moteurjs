@@ -21,30 +21,30 @@ define(['testutils', 'componentfactory'], (utils, ComponentFactory) => {
     });
 
     it('peut être instanciée', () => {
-      let factory = new ComponentFactory({});
+      const factory = new ComponentFactory({});
       expect(factory).instanceof(ComponentFactory);
     });
 
     describe('Fonction "create"', () => {
       it('existe', () => {
-        let factory = new ComponentFactory({});
+        const factory = new ComponentFactory({});
         expect(factory).respondTo('create');
       });
 
       it('instancie un composant', (done) => {
-        let descr = {
+        const descr = {
           patate: 'frite'
         };
 
-        let obj = {
+        const obj = {
           a: 123
         };
 
-        let mgr = {
+        const mgr = {
           b: 456
         };
 
-        let factory = new ComponentFactory(mgr);
+        const factory = new ComponentFactory(mgr);
         factory.create(obj, 'test-component', descr)
           .then((comp) => {
             expect(comp).deep.equals({
@@ -58,19 +58,19 @@ define(['testutils', 'componentfactory'], (utils, ComponentFactory) => {
       });
 
       it('retourne une erreur via une promesse si le composant est introuvable', (done) => {
-        let descr = {
+        const descr = {
           patate: 'frite'
         };
 
-        let obj = {
+        const obj = {
           a: 123
         };
 
-        let mgr = {
+        const mgr = {
           b: 456
         };
 
-        let factory = new ComponentFactory(mgr);
+        const factory = new ComponentFactory(mgr);
         factory.create(obj, 'test-missing', descr)
           .then(() => {
             done(new Error('Trouvé un composant inexistant?'));

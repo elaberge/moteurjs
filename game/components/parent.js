@@ -6,9 +6,9 @@ define(['require', 'components/children'], (require, ChildrenComponent) => {
       // Dépendance circulaire possible
       ChildrenComponent = ChildrenComponent || require('components/children');
 
-      let parent;
+      let parent = undefined;
 
-      let parentComp = {
+      const parentComp = {
         onLoad: function(descr) {
           if (typeof descr === 'string') {
             descr = sceneManager.findObject(descr);

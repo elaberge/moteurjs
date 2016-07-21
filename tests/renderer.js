@@ -6,19 +6,19 @@ define(['testutils', 'renderer', 'scenemanager'], (utils, Renderer, SceneManager
 
   describe('Gestionnaire de rendu', () => {
     it('peut être instancié', () => {
-      let renderer = new Renderer({});
+      const renderer = new Renderer({});
       expect(renderer).instanceof(Renderer);
     });
 
     it('a un nom', () => {
-      let renderer = new Renderer({});
+      const renderer = new Renderer({});
       expect(renderer).property('name');
       expect(renderer.name).equal('renderer');
     });
 
     describe('Fonction "update"', () => {
       it('existe', () => {
-        let renderer = new Renderer({});
+        const renderer = new Renderer({});
         expect(renderer).respondTo('update');
       });
 
@@ -45,7 +45,7 @@ define(['testutils', 'renderer', 'scenemanager'], (utils, Renderer, SceneManager
               });
           }
 
-          let objects = [{
+          const objects = [{
             c1: {
               render: objectRender,
             },
@@ -61,8 +61,8 @@ define(['testutils', 'renderer', 'scenemanager'], (utils, Renderer, SceneManager
             },
           }];
 
-          let mgr = new SceneManager();
-          let renderer = new Renderer(mgr);
+          const mgr = new SceneManager();
+          const renderer = new Renderer(mgr);
           objects.forEach((o) => {
             mgr.addObject(o);
           });

@@ -64,16 +64,16 @@ define(['testutils', 'components/transform'], (utils, TransformComponent) => {
             return Promise.resolve();
           }
 
-          let obj = {
+          const obj = {
             a: 123
           };
 
           t.createCheck = t.createCheck || defaultCheck;
           t.loadCheck = t.loadCheck || defaultCheck;
 
-          let createCheck;
-          let loadCheck;
-          let load;
+          let createCheck = undefined;
+          let loadCheck = undefined;
+          let load = undefined;
 
           TransformComponent.create(null, obj)
             .then((comp) => {

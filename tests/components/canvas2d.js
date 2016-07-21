@@ -14,7 +14,7 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
       });
 
       it('récupère un élément HTML', () => {
-        let mochaElement = CanvasComponent.getHTMLElement('mocha');
+        const mochaElement = CanvasComponent.getHTMLElement('mocha');
         expect(mochaElement).not.null;
         expect(mochaElement).property('nodeName');
         expect(mochaElement.nodeName.toLowerCase()).equals('div');
@@ -30,16 +30,16 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
 
       CanvasComponent.getHTMLElement = function(id) {
         expect(id).equals(canvasName);
-        let canvas = document.createElement('canvas');
-        let origGetCtx = canvas.getContext;
+        const canvas = document.createElement('canvas');
+        const origGetCtx = canvas.getContext;
         canvas.getContext = function() {
-          let ctx = origGetCtx.apply(this, arguments);
+          const ctx = origGetCtx.apply(this, arguments);
           return callLog(ctx, log);
         };
         return canvas;
       };
 
-      let canvasComp;
+      let canvasComp = undefined;
       return CanvasComponent.create(null, owner)
         .then((comp) => {
           canvasComp = comp;
@@ -56,10 +56,10 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
       });
 
       it('crée le composant correctement', (done) => {
-        let obj = {
+        const obj = {
           a: 123
         };
-        let descr = {
+        const descr = {
           htmlTarget: canvasName,
         };
 
@@ -104,7 +104,7 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
       tests.forEach((t) => {
         it(t.name, (done) => {
           t.descr.htmlTarget = canvasName;
-          let log = [];
+          const log = [];
           createTestCanvas(t.descr, {}, log)
             .then((comp) => {
               return comp.render(123);
@@ -119,7 +119,7 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
       });
 
       it('appelle les méthodes "display" de ses enfants, récursivement', (done) => {
-        let displayLog = [];
+        const displayLog = [];
 
         function display(delta, ctx) {
           displayLog.push(this.owner);
@@ -130,13 +130,13 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
             });
         }
 
-        let grandChild1 = {
+        const grandChild1 = {
           name: 'grandChild1',
           test: {
             display: display
           },
         };
-        let child1 = {
+        const child1 = {
           name: 'child1',
           test: {
             display: display
@@ -145,13 +145,13 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
             children: [grandChild1]
           },
         };
-        let child2 = {
+        const child2 = {
           name: 'child2',
           test: {
             display: display
           },
         };
-        let obj = {
+        const obj = {
           children: {
             children: [child1, child2]
           },
@@ -161,7 +161,7 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
           o.test.owner = o;
         });
 
-        let context;
+        let context = undefined;
         createTestCanvas(null, obj)
           .then((comp) => {
             context = comp.context;

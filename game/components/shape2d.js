@@ -10,10 +10,10 @@ define(() => {
         lineDash: 'lineDash',
       };
 
-      let commands = [];
-      let path;
+      const commands = [];
+      let path = undefined;
 
-      let shapeComp = {
+      const shapeComp = {
         onLoad: function(descr) {
           Object.keys(ctxProperties).forEach((name) => {
             const val = descr[name];

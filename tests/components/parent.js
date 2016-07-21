@@ -50,13 +50,13 @@ define(['testutils', 'components/parent'], (utils, ParentComponent) => {
             return Promise.resolve();
           }
 
-          let parent = {
+          const parent = {
             a: 123
           };
-          let child = {
+          const child = {
             b: 456
           };
-          let sceneManager = {
+          const sceneManager = {
             objects: {},
             findObject: function(name) {
               return this.objects[name];
@@ -66,11 +66,11 @@ define(['testutils', 'components/parent'], (utils, ParentComponent) => {
           t.createCheck = t.createCheck || defaultCheck;
           t.loadCheck = t.loadCheck || defaultCheck;
 
-          let createCheck;
-          let loadCheck;
-          let load;
+          let createCheck = undefined;
+          let loadCheck = undefined;
+          let load = undefined;
 
-          let parentComp;
+          let parentComp = undefined;
           ParentComponent.create(sceneManager, child)
             .then((comp) => {
               parentComp = comp;

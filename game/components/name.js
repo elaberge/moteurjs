@@ -3,8 +3,8 @@ define(() => {
 
   return {
     create: function(sceneManager, owner, descr) {
-      let name = descr;
-      let nameComp = {};
+      const name = descr;
+      const nameComp = {};
 
       Object.defineProperty(nameComp, 'owner', {
         enumerable: true,

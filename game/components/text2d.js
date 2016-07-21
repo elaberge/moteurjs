@@ -11,10 +11,10 @@ define(() => {
         font: 'font',
       };
 
-      let commands = [];
-      let text;
+      const commands = [];
+      let text = undefined;
 
-      let textComp = {
+      const textComp = {
         onLoad: function(descr) {
           Object.keys(ctxProperties).forEach((name) => {
             const val = descr[name];

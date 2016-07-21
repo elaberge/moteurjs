@@ -1,11 +1,10 @@
 define(['utils'], (utils) => {
   'use strict';
 
-  return function(sceneManager, componentRoot) {
+  return function(sceneManager, componentRoot = 'components') {
     if (!sceneManager) {
       throw new Error('sceneManager ne peut être vide!');
     }
-    componentRoot = componentRoot || 'components';
 
     this.create = function(owner, name, descr) {
       return utils.require([componentRoot + '/' + name])

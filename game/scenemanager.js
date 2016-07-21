@@ -1,15 +1,13 @@
 define(['scenefactory'], (SceneFactory) => {
   'use strict';
 
-  return function(sceneFactory) {
-    sceneFactory = sceneFactory || new SceneFactory(this);
-
+  return function(sceneFactory = new SceneFactory(this)) {
     let sceneObjects = {};
-    let nameMap = {};
+    const nameMap = {};
     let nextObjId = 1;
 
     this.update = function(delta) {
-      let updateCalls = [];
+      const updateCalls = [];
 
       function updateComp(obj, compName) {
         const comp = obj[compName];
@@ -30,7 +28,7 @@ define(['scenefactory'], (SceneFactory) => {
     };
 
     this.loadScene = function(descr) {
-      let append = this.appendScene.bind(this, descr);
+      const append = this.appendScene.bind(this, descr);
       return this.unloadScene()
         .then(append);
     };
@@ -56,21 +54,21 @@ define(['scenefactory'], (SceneFactory) => {
     };
 
     this.findObjects = function(name) {
-      let match = [];
+      const match = [];
 
       const entries = nameMap[name];
       if (!entries) {
         return [];
       }
 
-      for (let id of entries) {
+      entries.forEach((id) => {
         const obj = sceneObjects[id];
         if (obj) {
           match.push(obj);
         } else {
           entries.delete(id);
         }
-      }
+      });
 
       return match;
     };

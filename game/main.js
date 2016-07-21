@@ -9,13 +9,12 @@ define(
       });
     }
 
-    let baseScene = module.config().baseScene;
-    let loop = new GameLoop();
-    let sceneManager = new SceneManager();
-    let renderer = new Renderer(sceneManager);
+    const baseScene = module.config().baseScene;
+    const loop = new GameLoop();
+    const sceneManager = new SceneManager();
+    const renderer = new Renderer(sceneManager);
 
-    function infiniteLoop(delta) {
-      delta = delta || 0;
+    function infiniteLoop(delta = 0) {
       return loop.iterate(delta)
         .then(requestAnimationFrame)
         .then(infiniteLoop);

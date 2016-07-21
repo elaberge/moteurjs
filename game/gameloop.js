@@ -7,21 +7,20 @@ define(() => {
 
     function updateModuleMap() {
       moduleMap = {};
-      for (let i = 0; i < modules.length; ++i) {
-        let mod = modules[i];
+      modules.forEach((mod, i) => {
         if (mod.name) {
           moduleMap[mod.name] = {
             module: mod,
             rank: i
           };
         }
-      }
+      });
     }
 
     function runOnModules(fnName, ...args) {
       args.push(moduleMap);
 
-      let moduleCalls = [];
+      const moduleCalls = [];
       modules.forEach((m) => {
         if (m[fnName]) {
           moduleCalls.push(m[fnName].apply(m, args));
@@ -31,12 +30,12 @@ define(() => {
     }
 
     function runSequence(fnNames) {
-      if (fnNames.length == 0) {
+      if (fnNames.length === 0) {
         return Promise.resolve();
       }
 
-      let fn = fnNames.shift();
-      let nextCall = runSequence.bind(this, fnNames);
+      const fn = fnNames.shift();
+      const nextCall = runSequence.bind(this, fnNames);
 
       return runOnModules(fn)
         .then(nextCall);
@@ -53,7 +52,7 @@ define(() => {
     };
 
     this.quit = function() {
-      let clear = () => {
+      const clear = () => {
         modules = [];
         updateModuleMap();
       };

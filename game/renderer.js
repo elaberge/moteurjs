@@ -7,8 +7,8 @@ define(() => {
     }
 
     this.update = function(delta) {
-      let sceneObjects = sceneManager.objects;
-      let renderCalls = [];
+      const sceneObjects = sceneManager.objects;
+      const renderCalls = [];
 
       function renderComp(obj, compName) {
         const comp = obj[compName];

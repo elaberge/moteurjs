@@ -1,16 +1,16 @@
 define(() => {
   'use strict';
 
-  let CanvasComponent = {
+  const CanvasComponent = {
     getHTMLElement: function(id) {
       return document.getElementById(id);
     },
     create: function(sceneManager, owner) {
-      let target;
-      let ctx;
-      let commands = [];
+      let target = undefined;
+      let ctx = undefined;
+      const commands = [];
 
-      let canvasComp = {
+      const canvasComp = {
         onLoad: function(descr) {
           target = CanvasComponent.getHTMLElement(descr.htmlTarget);
           if (!target) {

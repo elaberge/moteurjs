@@ -6,19 +6,19 @@ define(['testutils', 'gameloop'], (utils, GameLoop) => {
 
   describe('Boucle', () => {
     it('peut être instanciée', () => {
-      let loop = new GameLoop();
+      const loop = new GameLoop();
       expect(loop).instanceof(GameLoop);
     });
 
     it('a la propriété "modules"', () => {
-      let loop = new GameLoop();
+      const loop = new GameLoop();
       expect(loop).property('modules');
       expect(loop.modules).an('object');
     });
 
     describe('Fonction "init"', () => {
       it('existe', () => {
-        let loop = new GameLoop();
+        const loop = new GameLoop();
         expect(loop).respondTo('init');
       });
 
@@ -153,7 +153,7 @@ define(['testutils', 'gameloop'], (utils, GameLoop) => {
 
       tests.forEach((t) => {
         it(t.name, (done) => {
-          let loop = new GameLoop();
+          const loop = new GameLoop();
           t.check(loop)
             .then(done)
             .catch(done);
@@ -163,7 +163,7 @@ define(['testutils', 'gameloop'], (utils, GameLoop) => {
 
     describe('Fonction "iterate"', () => {
       it('existe', () => {
-        let loop = new GameLoop();
+        const loop = new GameLoop();
         expect(loop).respondTo('iterate');
       });
 
@@ -218,7 +218,7 @@ define(['testutils', 'gameloop'], (utils, GameLoop) => {
           name: 'b'
         }],
         check: function(loop) {
-          let calls = [];
+          const calls = [];
 
           function update() {
             return delayPromise(10)
@@ -241,7 +241,7 @@ define(['testutils', 'gameloop'], (utils, GameLoop) => {
 
       tests.forEach((t) => {
         it(t.name, (done) => {
-          let loop = new GameLoop();
+          const loop = new GameLoop();
           const check = t.check.bind(t, loop);
 
           expect(loop.modules).to.be.empty;
@@ -255,7 +255,7 @@ define(['testutils', 'gameloop'], (utils, GameLoop) => {
 
     describe('Fonction "quit"', () => {
       it('existe', () => {
-        let loop = new GameLoop();
+        const loop = new GameLoop();
         expect(loop).respondTo('quit');
       });
 
@@ -308,7 +308,7 @@ define(['testutils', 'gameloop'], (utils, GameLoop) => {
 
       tests.forEach((t) => {
         it(t.name, (done) => {
-          let loop = new GameLoop();
+          const loop = new GameLoop();
           const check = t.check.bind(t, loop);
 
           expect(loop.modules).to.be.empty;

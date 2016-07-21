@@ -8,7 +8,7 @@ define(['testutils', 'components/shape2d'], (utils, ShapeComponent) => {
     function createContext(log) {
       log = log || [];
 
-      let canvas = document.createElement('canvas');
+      const canvas = document.createElement('canvas');
       return callLog(canvas.getContext('2d'), log);
     }
 
@@ -18,7 +18,7 @@ define(['testutils', 'components/shape2d'], (utils, ShapeComponent) => {
       });
 
       it('assigne la propriété "owner"', (done) => {
-        let obj = {
+        const obj = {
           a: 123
         };
         ShapeComponent.create(null, obj)
@@ -59,7 +59,7 @@ define(['testutils', 'components/shape2d'], (utils, ShapeComponent) => {
         val: [16, 4],
       }, ];
 
-      let tests = [{
+      const tests = [{
         name: 'applique une transformation initiale',
         obj: {
           transform: {
@@ -115,7 +115,7 @@ define(['testutils', 'components/shape2d'], (utils, ShapeComponent) => {
       }];
 
       propertyTests.forEach((t) => {
-        let testConf = {
+        const testConf = {
           name: 'configure la propriété "' + t.name + '"',
           log: [{
             t: 'set',
@@ -133,9 +133,9 @@ define(['testutils', 'components/shape2d'], (utils, ShapeComponent) => {
         t.descr = t.descr || {};
 
         it(t.name, (done) => {
-          let log = [];
-          let ctx = createContext(log);
-          let shapeComp;
+          const log = [];
+          const ctx = createContext(log);
+          let shapeComp = undefined;
 
           ShapeComponent.create(null, t.obj)
             .then((comp) => {

@@ -3,7 +3,7 @@ define(() => {
 
   return {
     create: function(sceneManager, owner) {
-      let transform = {
+      const transform = {
         x: 0,
         y: 0,
         width: 0,
@@ -12,7 +12,7 @@ define(() => {
 
       const transformMembers = Object.keys(transform);
 
-      let transformComp = {
+      const transformComp = {
         onLoad: function(descr) {
           transformMembers.forEach((k) => {
             transform[k] = descr[k] || transform[k];

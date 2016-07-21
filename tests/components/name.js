@@ -29,7 +29,7 @@ define(['testutils', 'components/name'], (utils, NameComponent) => {
 
       tests.forEach((t) => {
         it(t.name, (done) => {
-          let obj = {
+          const obj = {
             a: 123
           };
 

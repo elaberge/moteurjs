@@ -6,9 +6,9 @@ define(['require', 'components/parent'], (require, ParentComponent) => {
       // Dépendance circulaire possible
       ParentComponent = ParentComponent || require('components/parent');
 
-      let children = new Set();
+      const children = new Set();
 
-      let childrenComp = {
+      const childrenComp = {
         add: function(child) {
           if (typeof child === 'string') {
             child = sceneManager.findObject(child);
@@ -21,7 +21,7 @@ define(['require', 'components/parent'], (require, ParentComponent) => {
             return Promise.reject(new Error('Impossible de trouver l\'enfant'));
           }
 
-          if (child.parent && child.parent.parent && child.parent.parent != owner) {
+          if (child.parent && child.parent.parent && child.parent.parent !== owner) {
             return Promise.reject(new Error('Parent already set'));
           }
 
@@ -42,10 +42,8 @@ define(['require', 'components/parent'], (require, ParentComponent) => {
           return p;
         },
 
-        onLoad: function(descr) {
-          descr = descr || [];
-
-          let childrenSetup = [];
+        onLoad: function(descr = []) {
+          const childrenSetup = [];
           descr.forEach((name) => {
             childrenSetup.push(this.add(name));
           });

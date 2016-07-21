@@ -11,7 +11,7 @@ define(['testutils', 'components/children'], (utils, ChildrenComponent) => {
 
       const tests = [{
         name: 'assigne la propriété "owner"',
-        descr: null,
+        descr: undefined,
         createCheck: function(obj, comp) {
           expect(comp).property('owner');
           expect(comp.owner).equals(obj);
@@ -46,18 +46,18 @@ define(['testutils', 'components/children'], (utils, ChildrenComponent) => {
             return Promise.resolve();
           }
 
-          let parent = {
+          const parent = {
             name: 'test parent',
             a: 123
           };
-          let children = [{
+          const children = [{
             name: 'test child 1',
             b: 456
           }, {
             name: 'test child 2',
             c: 789
           }, ];
-          let sceneManager = {
+          const sceneManager = {
             objects: {},
             findObject: function(name) {
               return this.objects[name];
@@ -67,11 +67,11 @@ define(['testutils', 'components/children'], (utils, ChildrenComponent) => {
           t.createCheck = t.createCheck || defaultCheck;
           t.loadCheck = t.loadCheck || defaultCheck;
 
-          let createCheck;
-          let loadCheck;
-          let load;
+          let createCheck = undefined;
+          let loadCheck = undefined;
+          let load = undefined;
 
-          let childrenComp;
+          let childrenComp = undefined;
           ChildrenComponent.create(sceneManager, parent)
             .then((comp) => {
               childrenComp = comp;
@@ -183,11 +183,11 @@ define(['testutils', 'components/children'], (utils, ChildrenComponent) => {
 
       tests.forEach((t) => {
         it(t.name, (done) => {
-          let parent = {
+          const parent = {
             name: 'test parent',
             a: 123
           };
-          let sceneManager = {
+          const sceneManager = {
             objects: {},
             findObject: function(name) {
               return this.objects[name];
@@ -195,11 +195,11 @@ define(['testutils', 'components/children'], (utils, ChildrenComponent) => {
           };
           t.setup(sceneManager);
 
-          let check;
-          let load;
-          let add;
+          let check = undefined;
+          let load = undefined;
+          let add = undefined;
 
-          let childrenComp;
+          let childrenComp = undefined;
 
           ChildrenComponent.create(sceneManager, parent)
             .then((comp) => {

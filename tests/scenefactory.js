@@ -6,13 +6,13 @@ define(['testutils', 'scenefactory'], (utils, SceneFactory) => {
 
   describe('Fabrique de scènes', () => {
     it('peut être instanciée', () => {
-      let factory = new SceneFactory({});
+      const factory = new SceneFactory({});
       expect(factory).instanceof(SceneFactory);
     });
 
     describe('Fonction "append"', () => {
       it('existe', () => {
-        let factory = new SceneFactory({});
+        const factory = new SceneFactory({});
         expect(factory).respondTo('append');
       });
 
@@ -42,7 +42,7 @@ define(['testutils', 'scenefactory'], (utils, SceneFactory) => {
         }],
         calls: [],
         create: function(descr) {
-          let calls = this.calls;
+          const calls = this.calls;
           return Promise.resolve({
             test: {
               onLoad: function(d) {
@@ -70,7 +70,7 @@ define(['testutils', 'scenefactory'], (utils, SceneFactory) => {
         loadCount: 0,
         initCount: 0,
         create: function() {
-          let self = this;
+          const self = this;
           return Promise.resolve({
             test: {
               onLoad: function() {
@@ -97,14 +97,14 @@ define(['testutils', 'scenefactory'], (utils, SceneFactory) => {
 
       tests.forEach((t) => {
         it(t.name, (done) => {
-          let sceneMgr = {
+          const sceneMgr = {
             objects: {},
             addObject: function(obj) {
               this.objects[obj.name] = obj;
             },
           };
 
-          let factory = new SceneFactory(sceneMgr, t);
+          const factory = new SceneFactory(sceneMgr, t);
           t.check(factory, sceneMgr)
             .then(done)
             .catch(done);

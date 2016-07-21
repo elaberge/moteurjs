@@ -8,9 +8,9 @@ define(['chai'], (chai) => {
   }
 
   function callLog(target, log) {
-    let handler = {
+    const handler = {
       get: (target, property) => {
-        let result = target[property];
+        const result = target[property];
         if (typeof result === 'function') {
           return function(...args) {
             log.push({

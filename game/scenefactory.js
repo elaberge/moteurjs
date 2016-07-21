@@ -1,14 +1,13 @@
 define(['objectfactory'], (ObjectFactory) => {
   'use strict';
 
-  return function(sceneManager, objectFactory) {
+  return function(sceneManager, objectFactory = new ObjectFactory(sceneManager)) {
     if (!sceneManager) {
       throw new Error('sceneManager ne peut être vide!');
     }
-    objectFactory = objectFactory || new ObjectFactory(sceneManager);
 
     this.append = function(descr) {
-      let objects = [];
+      const objects = [];
 
       function queueObjects() {
         descr.forEach((d) => {
@@ -32,22 +31,22 @@ define(['objectfactory'], (ObjectFactory) => {
       }
 
       function callFn(fnName, methodCalls, o) {
-        for (let compName in o.obj) {
-          let comp = o.obj[compName];
+        Object.keys(o.obj).forEach((compName) => {
+          const comp = o.obj[compName];
           if (!comp || !comp[fnName]) {
-            continue;
+            return;
           }
 
           methodCalls.push(comp[fnName](o.descr[compName]));
-        }
+        });
       }
       const callLoad = callFn.bind(this, 'onLoad');
       const callInit = callFn.bind(this, 'onInit');
 
       function iterateObjects(fn) {
-        let methodCalls = [];
+        const methodCalls = [];
 
-        let callFn = fn.bind(this, methodCalls);
+        const callFn = fn.bind(this, methodCalls);
         objects.forEach(callFn);
         return Promise.all(methodCalls);
       }
