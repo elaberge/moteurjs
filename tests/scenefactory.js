@@ -107,7 +107,9 @@ define(['testutils', 'scenefactory'], (utils, SceneFactory) => {
           const factory = new SceneFactory(sceneMgr, t);
           t.check(factory, sceneMgr)
             .then(done)
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
     });

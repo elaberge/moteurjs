@@ -71,7 +71,9 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
             expect(comp.context).property('fillStyle');
             done();
           })
-          .catch(done);
+          .catch((err) => {
+            done(err || new Error('Erreur'));
+          });
       });
     });
 
@@ -82,7 +84,9 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
             expect(comp).respondTo('render');
             done();
           })
-          .catch(done);
+          .catch((err) => {
+            done(err || new Error('Erreur'));
+          });
       });
 
       const tests = [{
@@ -114,7 +118,9 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
               expect(log).deep.equals(t.expected);
               done();
             })
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
 
@@ -175,7 +181,9 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
             });
             done();
           })
-          .catch(done);
+          .catch((err) => {
+            done(err || new Error('Erreur'));
+          });
       });
     });
   });

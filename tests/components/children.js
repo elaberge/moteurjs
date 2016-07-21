@@ -94,7 +94,9 @@ define(['testutils', 'components/children'], (utils, ChildrenComponent) => {
               return loadCheck();
             })
             .then(done)
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
     });
@@ -106,7 +108,9 @@ define(['testutils', 'components/children'], (utils, ChildrenComponent) => {
             expect(comp).respondTo('add');
             done();
           })
-          .catch(done);
+          .catch((err) => {
+            done(err || new Error('Erreur'));
+          });
       });
 
       const tests = [{
@@ -223,7 +227,9 @@ define(['testutils', 'components/children'], (utils, ChildrenComponent) => {
               return check();
             })
             .then(done)
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
     });

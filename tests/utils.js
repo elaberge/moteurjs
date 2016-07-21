@@ -19,7 +19,9 @@ define(['testutils', 'utils'], (testUtils, utils) => {
             expect(mod).equals(123);
             done();
           })
-          .catch(done);
+          .catch((err) => {
+            done(err || new Error('Erreur'));
+          });
       });
 
       it('retourne une erreur via une promesse en cas de module introuvable', (done) => {

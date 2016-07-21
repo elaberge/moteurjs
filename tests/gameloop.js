@@ -156,7 +156,9 @@ define(['testutils', 'gameloop'], (utils, GameLoop) => {
           const loop = new GameLoop();
           t.check(loop)
             .then(done)
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
     });
@@ -248,7 +250,9 @@ define(['testutils', 'gameloop'], (utils, GameLoop) => {
           loop.init(t.descr)
             .then(check)
             .then(done)
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
     });
@@ -320,7 +324,9 @@ define(['testutils', 'gameloop'], (utils, GameLoop) => {
               expect(loop.modules).to.be.empty;
               done();
             })
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
     });

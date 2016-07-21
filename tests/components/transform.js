@@ -89,7 +89,9 @@ define(['testutils', 'components/transform'], (utils, TransformComponent) => {
               return loadCheck();
             })
             .then(done)
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
     });

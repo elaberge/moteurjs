@@ -27,7 +27,9 @@ define(['testutils', 'components/shape2d'], (utils, ShapeComponent) => {
             expect(comp.owner).equals(obj);
             done();
           })
-          .catch(done);
+          .catch((err) => {
+            done(err || new Error('Erreur'));
+          });
       });
     });
 
@@ -38,7 +40,9 @@ define(['testutils', 'components/shape2d'], (utils, ShapeComponent) => {
             expect(comp).respondTo('display');
             done();
           })
-          .catch(done);
+          .catch((err) => {
+            done(err || new Error('Erreur'));
+          });
       });
 
       const propertyTests = [{
@@ -152,7 +156,9 @@ define(['testutils', 'components/shape2d'], (utils, ShapeComponent) => {
               expect(log).deep.equals(t.log);
               done();
             })
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
     });

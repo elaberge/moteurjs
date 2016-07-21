@@ -91,7 +91,9 @@ define(['testutils', 'components/parent'], (utils, ParentComponent) => {
               return loadCheck();
             })
             .then(done)
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
     });

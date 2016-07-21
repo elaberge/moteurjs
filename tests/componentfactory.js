@@ -54,7 +54,9 @@ define(['testutils', 'componentfactory'], (utils, ComponentFactory) => {
             });
             done();
           })
-          .catch(done);
+          .catch((err) => {
+            done(err || new Error('Erreur'));
+          });
       });
 
       it('retourne une erreur via une promesse si le composant est introuvable', (done) => {

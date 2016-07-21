@@ -38,7 +38,9 @@ define(['testutils', 'components/name'], (utils, NameComponent) => {
               return t.check(obj, comp);
             })
             .then(done)
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
     });

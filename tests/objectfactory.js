@@ -69,7 +69,9 @@ define(['testutils', 'objectfactory'], (utils, ObjectFactory) => {
           const factory = new ObjectFactory({}, compFactory);
           t.check(factory)
             .then(done)
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
     });

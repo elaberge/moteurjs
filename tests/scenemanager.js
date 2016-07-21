@@ -63,7 +63,9 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
           const mgr = new SceneManager();
           t.check(mgr)
             .then(done)
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
     });
@@ -122,7 +124,9 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
           const mgr = new SceneManager();
           t.check(mgr)
             .then(done)
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
     });
@@ -188,7 +192,9 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
           const mgr = new SceneManager();
           t.check(mgr)
             .then(done)
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
     });
@@ -245,7 +251,9 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
 
           t.check(mgr, objects)
             .then(done)
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
     });
@@ -320,7 +328,9 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
           mgr = new SceneManager(sceneFactory);
           t.check(mgr, descr)
             .then(done)
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
     });
@@ -372,7 +382,9 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
           mgr = new SceneManager(sceneFactory);
           t.check(mgr)
             .then(done)
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
     });
@@ -438,7 +450,9 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
           mgr = new SceneManager(sceneFactory);
           t.check(mgr, descr)
             .then(done)
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
     });

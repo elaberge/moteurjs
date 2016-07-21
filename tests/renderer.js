@@ -69,7 +69,9 @@ define(['testutils', 'renderer', 'scenemanager'], (utils, Renderer, SceneManager
 
           t.check(renderer, objects)
             .then(done)
-            .catch(done);
+            .catch((err) => {
+              done(err || new Error('Erreur'));
+            });
         });
       });
     });
