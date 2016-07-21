@@ -5,6 +5,7 @@ define([
   'tests/scenefactory',
   'tests/objectfactory',
   'tests/renderer',
+  'tests/inputmanager',
   'tests/componentfactory',
   'tests/components/name',
   'tests/components/parent',

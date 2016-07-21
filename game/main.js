@@ -1,6 +1,6 @@
 define(
-  ['module', 'utils', 'gameloop', 'scenemanager', 'renderer'],
-  (module, utils, GameLoop, SceneManager, Renderer) => {
+  ['module', 'utils', 'gameloop', 'scenemanager', 'inputmanager', 'renderer'],
+  (module, utils, GameLoop, SceneManager, InputManager, Renderer) => {
     'use strict';
 
     function requestAnimationFrame() {
@@ -12,6 +12,7 @@ define(
     const baseScene = module.config().baseScene;
     const loop = new GameLoop();
     const sceneManager = new SceneManager();
+    const inputManager = new InputManager(sceneManager);
     const renderer = new Renderer(sceneManager);
 
     function infiniteLoop(delta = 0) {
@@ -20,7 +21,7 @@ define(
         .then(infiniteLoop);
     }
 
-    loop.init([sceneManager, renderer])
+    loop.init([inputManager, sceneManager, renderer])
       .then(() => {
         return utils.require(['json!' + baseScene]);
       })
