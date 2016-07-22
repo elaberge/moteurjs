@@ -30,15 +30,17 @@ define(() => {
 
           if (descr.fill) {
             commands.push((ctx) => {
-              if (text.length > 0) {
-                ctx.fillText(text, 0, 0);
+              const asString = String(text);
+              if (asString.length > 0) {
+                ctx.fillText(asString, 0, 0);
               }
             });
           }
           if (descr.stroke) {
             commands.push((ctx) => {
-              if (text.length > 0) {
-                ctx.strokeText(text, 0, 0);
+              const asString = String(text);
+              if (asString.length > 0) {
+                ctx.strokeText(asString, 0, 0);
               }
             });
           }
@@ -56,6 +58,16 @@ define(() => {
       Object.defineProperty(textComp, 'owner', {
         enumerable: true,
         value: owner,
+      });
+
+      Object.defineProperty(textComp, 'text', {
+        enumerable: true,
+        get: function() {
+          return text;
+        },
+        set: function(val) {
+          text = val;
+        },
       });
 
       return Promise.resolve(textComp);

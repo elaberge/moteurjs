@@ -56,6 +56,23 @@ define(['testutils', 'components/transform'], (utils, TransformComponent) => {
           expect(comp).not.property('junk');
           return Promise.resolve();
         },
+      }, {
+        name: 'peut assigner de nouvelles valeurs',
+        descr: {},
+        loadCheck: function(obj, comp) {
+          const newVal = {
+            x: 123,
+            y: 456,
+            width: 321,
+            height: 654
+          };
+          Object.keys(newVal).forEach((k) => {
+            expect(comp).property(k);
+            comp[k] = newVal[k];
+            expect(comp[k]).equals(newVal[k]);
+          });
+          return Promise.resolve();
+        },
       }];
 
       tests.forEach((t) => {

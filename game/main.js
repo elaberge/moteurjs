@@ -15,7 +15,11 @@ define(
     const inputManager = new InputManager(sceneManager);
     const renderer = new Renderer(sceneManager);
 
-    function infiniteLoop(delta = 0) {
+    let lastTime = 0;
+
+    function infiniteLoop(time = 0) {
+      const delta = time - lastTime;
+      lastTime = time;
       return loop.iterate(delta)
         .then(requestAnimationFrame)
         .then(infiniteLoop);

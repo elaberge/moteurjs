@@ -22,6 +22,23 @@ define(['testutils', 'components/name', 'scenemanager'], (utils, NameComponent, 
       expect(mgr.objects).an('object');
     });
 
+    it('a la propriété "modules"', (done) => {
+      const mgr = new SceneManager();
+      const modules = {
+        a: 123
+      };
+      expect(mgr).respondTo('init');
+      mgr.init(modules)
+        .then(() => {
+          expect(mgr).property('modules');
+          expect(mgr.modules).deep.equals(modules);
+          done();
+        })
+        .catch((err) => {
+          done(err || new Error('Erreur'));
+        });
+    });
+
     describe('Fonction "addObject"', () => {
       it('existe', () => {
         const mgr = new SceneManager();

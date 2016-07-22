@@ -59,7 +59,8 @@ define(['objectfactory'], (ObjectFactory) => {
       return createAllObjects()
         .then(registerObjects)
         .then(loadAllObjects)
-        .then(initAllObjects);
+        .then(initAllObjects)
+        .then(() => {});
     };
   };
 });

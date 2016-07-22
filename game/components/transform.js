@@ -27,6 +27,9 @@ define(() => {
           get: function() {
             return transform[k];
           },
+          set: function(v) {
+            transform[k] = v;
+          },
         });
       });
 

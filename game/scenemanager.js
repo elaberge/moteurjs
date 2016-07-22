@@ -6,6 +6,15 @@ define(['scenefactory'], (SceneFactory) => {
     const nameMap = {};
     let nextObjId = 1;
 
+    this.init = function(modules) {
+      Object.defineProperty(this, 'modules', {
+        enumerable: true,
+        value: modules,
+      });
+
+      return Promise.resolve();
+    };
+
     this.update = function(delta) {
       const updateCalls = [];
 

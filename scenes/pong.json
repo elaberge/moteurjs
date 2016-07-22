@@ -33,6 +33,11 @@
     "shape2d": {
       "fill": "#fff",
       "path": "m -16,0 a 16,16 0 1,1 32,0 a 16,16 0 1,1 -32,0 z"
+    },
+    "pong/ball": {
+      "speed": 200,
+      "player1": "paddle1",
+      "player2": "paddle2"
     }
   },
   {
@@ -47,6 +52,12 @@
     "shape2d": {
       "fill": "#fff",
       "path": "m -16,-64 h 32 v 128 h -32 z"
+    },
+    "pong/player": {
+      "up": "KeyW",
+      "down": "KeyS",
+      "speed": 200,
+      "score": "score1"
     }
   },
   {
@@ -61,6 +72,12 @@
     "shape2d": {
       "fill": "#fff",
       "path": "m -16,-64 h 32 v 128 h -32 z"
+    },
+    "pong/player": {
+      "up": "ArrowUp",
+      "down": "ArrowDown",
+      "speed": 200,
+      "score": "score2"
     }
   },
   {

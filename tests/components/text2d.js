@@ -33,6 +33,48 @@ define(['testutils', 'components/text2d'], (utils, TextComponent) => {
       });
     });
 
+    it('possède la propriété "text"', (done) => {
+      const descr = {
+        text: 'test',
+      };
+      let textComp = undefined;
+      TextComponent.create()
+        .then((comp) => {
+          textComp = comp;
+          return comp.onLoad(descr);
+        })
+        .then(() => {
+          expect(textComp).property('text');
+          expect(textComp.text).equals(descr.text);
+          done();
+        })
+        .catch((err) => {
+          done(err || new Error('Erreur'));
+        });
+    });
+
+    it('peut assigner la propriété "text"', (done) => {
+      const descr = {
+        text: 'test',
+      };
+      let textComp = undefined;
+      TextComponent.create()
+        .then((comp) => {
+          textComp = comp;
+          return comp.onLoad({});
+        })
+        .then(() => {
+          expect(textComp).property('text');
+          expect(textComp.text).not.equals(descr.text);
+          textComp.text = descr.text;
+          expect(textComp.text).equals(descr.text);
+          done();
+        })
+        .catch((err) => {
+          done(err || new Error('Erreur'));
+        });
+    });
+
     describe('Fonction "display"', () => {
       it('existe', (done) => {
         TextComponent.create()
@@ -109,6 +151,21 @@ define(['testutils', 'components/text2d'], (utils, TextComponent) => {
           t: 'call',
           p: 'strokeText',
           a: ['patate', 0, 0],
+        }],
+      }, {
+        name: 'converti la valeur en chaîne de caractères',
+        descr: {
+          stroke: '#00f',
+          text: 1234,
+        },
+        log: [{
+          t: 'set',
+          p: 'strokeStyle',
+          v: '#00f',
+        }, {
+          t: 'call',
+          p: 'strokeText',
+          a: ['1234', 0, 0],
         }],
       }];
 
