@@ -1,10 +1,38 @@
-define(['testutils', 'inputmanager', 'scenemanager'], (utils, InputManager, SceneManager) => {
+define([
+  'testutils',
+  'objectfactory',
+  'scenemanager',
+  'inputmanager',
+], (
+  utils,
+  ObjectFactory,
+  SceneManager,
+  InputManager
+) => {
   'use strict';
 
   const expect = utils.expect;
   const delayPromise = utils.delayPromise;
 
   describe('Gestionnaire d\'entrées', () => {
+    const componentTemplate = () => {
+      return {
+        create: function(sceneManager, owner, descr) {
+          return delayPromise(10)
+            .then(() => {
+              return {
+                d: descr,
+                onKeyDown: descr.onKeyDown,
+                onKeyUp: descr.onKeyUp,
+              };
+            });
+        }
+      };
+    };
+
+    define('components/test-input', [], componentTemplate);
+    define('components/test-input2', [], componentTemplate);
+
     it('peut être instancié', () => {
       const mgr = new InputManager({});
       expect(mgr).instanceof(InputManager);
@@ -32,10 +60,10 @@ define(['testutils', 'inputmanager', 'scenemanager'], (utils, InputManager, Scen
           },
         }, ],
         check: function(mgr, objects) {
-          const o1c1 = objects[0].c1.log;
-          const o1c2 = objects[0].c2.log;
-          const o2c1 = objects[1].c1.log;
-          const o2c2 = objects[1].c2.log;
+          const o1c1 = objects[0].components['test-input'].log;
+          const o1c2 = objects[0].components['test-input2'].log;
+          const o2c1 = objects[1].components['test-input'].log;
+          const o2c2 = objects[1].components['test-input2'].log;
           [o1c2, o2c2].forEach((log) => {
             expect(log).not.exist;
           });
@@ -58,10 +86,10 @@ define(['testutils', 'inputmanager', 'scenemanager'], (utils, InputManager, Scen
           },
         }, ],
         check: function(mgr, objects) {
-          const o1c1 = objects[0].c1.log;
-          const o1c2 = objects[0].c2.log;
-          const o2c1 = objects[1].c1.log;
-          const o2c2 = objects[1].c2.log;
+          const o1c1 = objects[0].components['test-input'].log;
+          const o1c2 = objects[0].components['test-input2'].log;
+          const o2c1 = objects[1].components['test-input'].log;
+          const o2c2 = objects[1].components['test-input2'].log;
           [o1c2, o2c1].forEach((log) => {
             expect(log).not.exist;
           });
@@ -96,10 +124,10 @@ define(['testutils', 'inputmanager', 'scenemanager'], (utils, InputManager, Scen
           },
         }, ],
         check: function(mgr, objects) {
-          const o1c1 = objects[0].c1.log;
-          const o1c2 = objects[0].c2.log;
-          const o2c1 = objects[1].c1.log;
-          const o2c2 = objects[1].c2.log;
+          const o1c1 = objects[0].components['test-input'].log;
+          const o1c2 = objects[0].components['test-input2'].log;
+          const o2c1 = objects[1].components['test-input'].log;
+          const o2c2 = objects[1].components['test-input2'].log;
 
           const val1 = this.events[0].val;
           const val2 = this.events[1].val;
@@ -162,17 +190,17 @@ define(['testutils', 'inputmanager', 'scenemanager'], (utils, InputManager, Scen
             return objectAction.call(this, 'keyUp', key, code);
           }
 
-          const objects = [{
-            c1: {
+          const objDescriptions = [{
+            'test-input': {
               onKeyDown: keyDown,
               onKeyUp: keyUp,
             },
-            c2: {},
+            'test-input2': {},
           }, {
-            c1: {
+            'test-input': {
               onKeyDown: keyDown,
             },
-            c2: {
+            'test-input2': {
               onKeyUp: keyUp,
             },
           }];
@@ -192,15 +220,33 @@ define(['testutils', 'inputmanager', 'scenemanager'], (utils, InputManager, Scen
             },
           };
 
+          const objects = [];
+
           const mgr = new SceneManager();
+          const objFactory = new ObjectFactory(mgr);
           const inputMgr = new InputManager(mgr, inputEmitter);
-          objects.forEach((o) => {
-            mgr.addObject(o);
+
+          let p = Promise.resolve();
+          objDescriptions.forEach((descr) => {
+            p = p.then(() => {
+                return objFactory.create(descr);
+              })
+              .then((obj) => {
+                objects.push(obj);
+              });
           });
 
-          inputEmitter.play(t.events);
+          p.then(() => {
+              expect(objects).have.lengthOf(objDescriptions.length);
+              objects.forEach((o) => {
+                mgr.addObject(o);
+              });
+            })
+            .then(() => {
+              inputEmitter.play(t.events);
 
-          inputMgr.update(123)
+              return inputMgr.update(123);
+            })
             .then(() => {
               return t.check(inputMgr, objects);
             })

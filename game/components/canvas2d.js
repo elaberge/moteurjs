@@ -46,8 +46,8 @@ define(() => {
 
           function displayRecursive() {
             let p = Promise.resolve();
-            Object.keys(this).forEach((compName) => {
-              const comp = this[compName];
+            Object.keys(this.components).forEach((compName) => {
+              const comp = this.components[compName];
               if (comp.display) {
                 p = p.then(() => {
                     ctx.save();
@@ -59,8 +59,8 @@ define(() => {
               }
             });
 
-            if (this.children) {
-              this.children.children.forEach((c) => {
+            if (this.components.children) {
+              this.components.children.children.forEach((c) => {
                 p = p.then(() => {
                   return displayRecursive.apply(c);
                 });

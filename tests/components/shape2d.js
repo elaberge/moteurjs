@@ -1,4 +1,12 @@
-define(['testutils', 'components/shape2d'], (utils, ShapeComponent) => {
+define([
+  'testutils',
+  'scenemanager',
+  'components/shape2d',
+], (
+  utils,
+  SceneManager,
+  ShapeComponent
+) => {
   'use strict';
 
   const expect = utils.expect;
@@ -65,7 +73,7 @@ define(['testutils', 'components/shape2d'], (utils, ShapeComponent) => {
 
       const tests = [{
         name: 'applique une transformation initiale',
-        obj: {
+        objDescr: {
           transform: {
             x: 123,
             y: 456,
@@ -133,15 +141,21 @@ define(['testutils', 'components/shape2d'], (utils, ShapeComponent) => {
       });
 
       tests.forEach((t) => {
-        t.obj = t.obj || {};
-        t.descr = t.descr || {};
-
         it(t.name, (done) => {
           const log = [];
           const ctx = createContext(log);
           let shapeComp = undefined;
 
-          ShapeComponent.create(null, t.obj)
+          t.objDescr = t.objDescr || {};
+          t.objDescr.name = 'test obj';
+          t.descr = t.descr || {};
+
+          const sceneManager = new SceneManager();
+          sceneManager.loadScene([t.objDescr])
+            .then(() => {
+              const obj = sceneManager.findObject(t.objDescr.name);
+              return ShapeComponent.create(null, obj);
+            })
             .then((comp) => {
               shapeComp = comp;
               return shapeComp.onLoad(t.descr);

@@ -1,4 +1,12 @@
-define(['testutils', 'components/text2d'], (utils, TextComponent) => {
+define([
+  'testutils',
+  'scenemanager',
+  'components/text2d',
+], (
+  utils,
+  SceneManager,
+  TextComponent
+) => {
   'use strict';
 
   const expect = utils.expect;
@@ -111,7 +119,7 @@ define(['testutils', 'components/text2d'], (utils, TextComponent) => {
 
       const tests = [{
         name: 'applique une transformation initiale',
-        obj: {
+        objDescr: {
           transform: {
             x: 123,
             y: 456,
@@ -184,15 +192,24 @@ define(['testutils', 'components/text2d'], (utils, TextComponent) => {
       });
 
       tests.forEach((t) => {
-        t.obj = t.obj || {};
-        t.descr = t.descr || {};
-
         it(t.name, (done) => {
           const log = [];
           const ctx = createContext(log);
           let textComp = undefined;
 
-          TextComponent.create(null, t.obj)
+          t.obj = t.obj || {};
+          t.descr = t.descr || {};
+
+          t.objDescr = t.objDescr || {};
+          t.objDescr.name = 'test obj';
+          t.descr = t.descr || {};
+
+          const sceneManager = new SceneManager();
+          sceneManager.loadScene([t.objDescr])
+            .then(() => {
+              const obj = sceneManager.findObject(t.objDescr.name);
+              return TextComponent.create(null, obj);
+            })
             .then((comp) => {
               textComp = comp;
               return textComp.onLoad(t.descr);

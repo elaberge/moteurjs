@@ -31,8 +31,8 @@ define(['objectfactory'], (ObjectFactory) => {
       }
 
       function callFn(fnName, methodCalls, o) {
-        Object.keys(o.obj).forEach((compName) => {
-          const comp = o.obj[compName];
+        Object.keys(o.obj.components).forEach((compName) => {
+          const comp = o.obj.components[compName];
           if (!comp || !comp[fnName]) {
             return;
           }

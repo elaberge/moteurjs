@@ -1,4 +1,14 @@
-define(['testutils', 'components/children'], (utils, ChildrenComponent) => {
+define([
+  'testutils',
+  'objectfactory',
+  'scenemanager',
+  'components/children',
+], (
+  utils,
+  ObjectFactory,
+  SceneManager,
+  ChildrenComponent
+) => {
   'use strict';
 
   const expect = utils.expect;
@@ -31,10 +41,10 @@ define(['testutils', 'components/children'], (utils, ChildrenComponent) => {
         descr: ['test child 1', 'test child 2'],
         loadCheck: function(obj, comp, children) {
           children.forEach((c) => {
-            expect(c).property('parent');
-            expect(c.parent).an('object');
-            expect(c.parent).property('parent');
-            expect(c.parent.parent).equals(obj);
+            expect(c.components).property('parent');
+            expect(c.components.parent).an('object');
+            expect(c.components.parent).property('parent');
+            expect(c.components.parent.parent).equals(obj);
           });
           return Promise.resolve();
         },
@@ -46,23 +56,17 @@ define(['testutils', 'components/children'], (utils, ChildrenComponent) => {
             return Promise.resolve();
           }
 
-          const parent = {
+          const sceneManager = new SceneManager();
+          const objFactory = new ObjectFactory(sceneManager);
+
+          const parentDescr = {
             name: 'test parent',
-            a: 123
           };
-          const children = [{
+          const childrenDescr = [{
             name: 'test child 1',
-            b: 456
           }, {
             name: 'test child 2',
-            c: 789
           }, ];
-          const sceneManager = {
-            objects: {},
-            findObject: function(name) {
-              return this.objects[name];
-            },
-          };
 
           t.createCheck = t.createCheck || defaultCheck;
           t.loadCheck = t.loadCheck || defaultCheck;
@@ -71,8 +75,30 @@ define(['testutils', 'components/children'], (utils, ChildrenComponent) => {
           let loadCheck = undefined;
           let load = undefined;
 
+          let parent = undefined;
+          const children = [];
+
           let childrenComp = undefined;
-          ChildrenComponent.create(sceneManager, parent)
+
+          let p = Promise.resolve();
+          childrenDescr.forEach((descr) => {
+            p = p.then(() => {
+                return objFactory.create(descr);
+              })
+              .then((obj) => {
+                children.push(obj);
+                sceneManager.addObject(obj);
+              });
+          });
+          p.then(() => {
+              expect(children).have.lengthOf(childrenDescr.length);
+              return objFactory.create(parentDescr);
+            })
+            .then((obj) => {
+              parent = obj;
+              sceneManager.addObject(obj);
+              return ChildrenComponent.create(sceneManager, parent);
+            })
             .then((comp) => {
               childrenComp = comp;
               createCheck = t.createCheck.bind(t, parent, comp, children);
@@ -81,10 +107,6 @@ define(['testutils', 'components/children'], (utils, ChildrenComponent) => {
               return createCheck();
             })
             .then(() => {
-              sceneManager.objects[parent.name] = parent;
-              children.forEach((c) => {
-                sceneManager.objects[c.name] = c;
-              });
               parent.children = childrenComp;
             })
             .then(() => {
@@ -115,12 +137,8 @@ define(['testutils', 'components/children'], (utils, ChildrenComponent) => {
 
       const tests = [{
         name: 'ajoute un enfant par son nom quand il n\'y en a pas',
-        param: 'test child',
-        obj: {
-          x: 987
-        },
-        setup: function(mgr) {
-          mgr.objects[this.param] = this.obj;
+        childDescr: {
+          name: 'test child',
         },
         children: [],
         check: function(obj, comp) {
@@ -130,91 +148,90 @@ define(['testutils', 'components/children'], (utils, ChildrenComponent) => {
         },
       }, {
         name: 'ajoute un enfant quand il n\'y en a pas',
-        param: {
-          x: 987
-        },
-        setup: function() {},
+        childDescr: {},
         children: [],
         check: function(obj, comp) {
           expect(comp.children).have.lengthOf(1);
-          expect(comp.children[0]).equals(this.param);
+          expect(comp.children[0]).equals(this.obj);
           return Promise.resolve();
         },
       }, {
         name: 'ajoute un enfant par son nom quand il en existe déjà',
-        param: 'test child',
-        obj: {
-          x: 987
+        childDescr: {
+          name: 'test child',
         },
-        setup: function(mgr) {
-          mgr.objects[this.param] = this.obj;
-        },
-        children: [{
-          name: 'test child 1',
-          b: 456
-        }, {
-          name: 'test child 2',
-          c: 789
-        }, ],
+        children: ['test child 1', 'test child 2'],
         check: function(obj, comp) {
           expect(comp.children).have.lengthOf(3);
-          expect(comp.children[0]).equals(this.children[0]);
-          expect(comp.children[1]).equals(this.children[1]);
+          expect(comp.children[0]).equals(this.childrenObj[0]);
+          expect(comp.children[1]).equals(this.childrenObj[1]);
           expect(comp.children[2]).equals(this.obj);
           return Promise.resolve();
         },
       }, {
         name: 'ajoute un enfant quand il en existe déjà',
-        param: {
-          x: 987
-        },
-        setup: function() {},
-        children: [{
-          name: 'test child 1',
-          b: 456
-        }, {
-          name: 'test child 2',
-          c: 789
-        }, ],
+        childDescr: {},
+        children: ['test child 1', 'test child 2'],
         check: function(obj, comp) {
           expect(comp.children).have.lengthOf(3);
-          expect(comp.children[0]).equals(this.children[0]);
-          expect(comp.children[1]).equals(this.children[1]);
-          expect(comp.children[2]).equals(this.param);
+          expect(comp.children[0]).equals(this.childrenObj[0]);
+          expect(comp.children[1]).equals(this.childrenObj[1]);
+          expect(comp.children[2]).equals(this.obj);
           return Promise.resolve();
         },
       }, ];
 
       tests.forEach((t) => {
         it(t.name, (done) => {
-          const parent = {
+          const sceneManager = new SceneManager();
+          const objFactory = new ObjectFactory(sceneManager);
+
+          const parentDescr = {
             name: 'test parent',
-            a: 123
           };
-          const sceneManager = {
-            objects: {},
-            findObject: function(name) {
-              return this.objects[name];
-            },
-          };
-          t.setup(sceneManager);
+
+          let parent = undefined;
 
           let check = undefined;
           let load = undefined;
           let add = undefined;
 
           let childrenComp = undefined;
+          t.childrenObj = [];
 
-          ChildrenComponent.create(sceneManager, parent)
+          objFactory.create(parentDescr)
+            .then((obj) => {
+              parent = obj;
+              sceneManager.addObject(obj);
+              return objFactory.create(t.childDescr);
+            })
+            .then((obj) => {
+              t.obj = obj;
+              sceneManager.addObject(obj);
+
+              const childCreate = [];
+              t.children.forEach((name) => {
+                const descr = {
+                  name: name
+                };
+                const p = objFactory.create(descr)
+                  .then((obj) => {
+                    t.childrenObj.push(obj);
+                    sceneManager.addObject(obj);
+                  });
+                childCreate.push(p);
+              });
+
+              return Promise.all(childCreate);
+            })
+            .then(() => {
+              return ChildrenComponent.create(sceneManager, parent);
+            })
             .then((comp) => {
               childrenComp = comp;
-              check = t.check.bind(t, parent, comp);
+              check = t.check.bind(t, parent, childrenComp);
               load = comp.onLoad.bind(comp, t.children);
-              add = comp.add.bind(comp, t.param);
-              sceneManager.objects[parent.name] = parent;
-              t.children.forEach((c) => {
-                sceneManager.objects[c.name] = c;
-              });
+              add = comp.add.bind(comp, t.childDescr.name || t.obj);
               parent.children = childrenComp;
             })
             .then(() => {

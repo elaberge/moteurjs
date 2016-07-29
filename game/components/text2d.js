@@ -46,8 +46,8 @@ define(() => {
           }
         },
         display: function(delta, context) {
-          if (owner.transform) {
-            context.translate(owner.transform.x, owner.transform.y);
+          if (owner.components.transform) {
+            context.translate(owner.components.transform.x, owner.components.transform.y);
           }
           commands.forEach((cmd) => {
             cmd(context);

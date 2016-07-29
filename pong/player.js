@@ -19,14 +19,14 @@ define(() => {
         },
 
         onInit: function(descr) {
-          scoreComp = sceneManager.findObject(descr.score).text2d;
+          scoreComp = sceneManager.findObject(descr.score).components.text2d;
           return Promise.resolve();
         },
 
         update: function(dT) {
-          const canvasTransform = sceneManager.findObject('canvas').transform;
+          const canvasTransform = sceneManager.findObject('canvas').components.transform;
           const inputModule = sceneManager.modules.input.module;
-          const transform = owner.transform;
+          const transform = owner.components.transform;
           const halfHeight = transform.height / 2;
 
           let dY = 0;

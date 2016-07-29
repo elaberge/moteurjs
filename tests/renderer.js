@@ -1,10 +1,37 @@
-define(['testutils', 'renderer', 'scenemanager'], (utils, Renderer, SceneManager) => {
+define([
+  'testutils',
+  'objectfactory',
+  'scenemanager',
+  'renderer',
+], (
+  utils,
+  ObjectFactory,
+  SceneManager,
+  Renderer
+) => {
   'use strict';
 
   const expect = utils.expect;
   const delayPromise = utils.delayPromise;
 
   describe('Gestionnaire de rendu', () => {
+    const componentTemplate = () => {
+      return {
+        create: function(sceneManager, owner, descr) {
+          return delayPromise(10)
+            .then(() => {
+              return {
+                d: descr,
+                render: descr.render,
+              };
+            });
+        }
+      };
+    };
+
+    define('components/test-renderer', [], componentTemplate);
+    define('components/test-renderer2', [], componentTemplate);
+
     it('peut être instancié', () => {
       const renderer = new Renderer({});
       expect(renderer).instanceof(Renderer);
@@ -29,8 +56,8 @@ define(['testutils', 'renderer', 'scenemanager'], (utils, Renderer, SceneManager
             .then(() => {
               expect(objects).have.lengthOf(2);
               objects.forEach((o) => {
-                expect(o.c1.delta).equals(123);
-                expect(o.c2.delta).equals(123);
+                expect(o.components['test-renderer'].delta).equals(123);
+                expect(o.components['test-renderer2'].delta).equals(123);
               });
             });
         },
@@ -45,29 +72,47 @@ define(['testutils', 'renderer', 'scenemanager'], (utils, Renderer, SceneManager
               });
           }
 
-          const objects = [{
-            c1: {
+          const objDescriptions = [{
+            'test-renderer': {
               render: objectRender,
             },
-            c2: {
+            'test-renderer2': {
               render: objectRender,
             },
           }, {
-            c1: {
+            'test-renderer': {
               render: objectRender,
             },
-            c2: {
+            'test-renderer2': {
               render: objectRender,
             },
           }];
 
+          const objects = [];
+
           const mgr = new SceneManager();
+          const objFactory = new ObjectFactory(mgr);
           const renderer = new Renderer(mgr);
-          objects.forEach((o) => {
-            mgr.addObject(o);
+
+          let p = Promise.resolve();
+          objDescriptions.forEach((descr) => {
+            p = p.then(() => {
+                return objFactory.create(descr);
+              })
+              .then((obj) => {
+                objects.push(obj);
+              });
           });
 
-          t.check(renderer, objects)
+          p.then(() => {
+              expect(objects).have.lengthOf(objDescriptions.length);
+              objects.forEach((o) => {
+                mgr.addObject(o);
+              });
+            })
+            .then(() => {
+              return t.check(renderer, objects);
+            })
             .then(done)
             .catch((err) => {
               done(err || new Error('Erreur'));

@@ -1,4 +1,14 @@
-define(['testutils', 'components/parent'], (utils, ParentComponent) => {
+define([
+  'testutils',
+  'objectfactory',
+  'scenemanager',
+  'components/parent',
+], (
+  utils,
+  ObjectFactory,
+  SceneManager,
+  ParentComponent
+) => {
   'use strict';
 
   const expect = utils.expect;
@@ -29,12 +39,12 @@ define(['testutils', 'components/parent'], (utils, ParentComponent) => {
         name: 'la propriété "children" du parent fait référence à cet objet',
         descr: 'test parent',
         loadCheck: function(obj, comp, parent) {
-          expect(parent).property('children');
-          expect(parent.children).an('object');
-          expect(parent.children).property('children');
-          expect(parent.children.children).an('array');
+          expect(parent.components).property('children');
+          expect(parent.components.children).an('object');
+          expect(parent.components.children).property('children');
+          expect(parent.components.children.children).an('array');
           let found = false;
-          parent.children.children.forEach((c) => {
+          parent.components.children.children.forEach((c) => {
             if (c === obj) {
               found = true;
             }
@@ -50,17 +60,14 @@ define(['testutils', 'components/parent'], (utils, ParentComponent) => {
             return Promise.resolve();
           }
 
-          const parent = {
-            a: 123
+          const sceneManager = new SceneManager();
+          const objFactory = new ObjectFactory(sceneManager);
+
+          const parentDescr = {
+            name: 'test parent',
           };
-          const child = {
-            b: 456
-          };
-          const sceneManager = {
-            objects: {},
-            findObject: function(name) {
-              return this.objects[name];
-            },
+          const childDescr = {
+            name: 'test child',
           };
 
           t.createCheck = t.createCheck || defaultCheck;
@@ -70,8 +77,22 @@ define(['testutils', 'components/parent'], (utils, ParentComponent) => {
           let loadCheck = undefined;
           let load = undefined;
 
+          let parent = undefined;
+          let child = undefined;
+
           let parentComp = undefined;
-          ParentComponent.create(sceneManager, child)
+
+          objFactory.create(parentDescr)
+            .then((obj) => {
+              parent = obj;
+              sceneManager.addObject(obj);
+              return objFactory.create(childDescr);
+            })
+            .then((obj) => {
+              child = obj;
+              sceneManager.addObject(obj);
+              return ParentComponent.create(sceneManager, child);
+            })
             .then((comp) => {
               parentComp = comp;
               createCheck = t.createCheck.bind(t, child, comp, parent);
@@ -80,8 +101,6 @@ define(['testutils', 'components/parent'], (utils, ParentComponent) => {
               return createCheck();
             })
             .then(() => {
-              sceneManager.objects['child'] = child;
-              sceneManager.objects[t.descr] = parent;
               child.parent = parentComp;
             })
             .then(() => {

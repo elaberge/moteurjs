@@ -40,7 +40,7 @@ define(() => {
       const keyCalls = [];
 
       function updateCompKeys(obj, compName) {
-        const comp = obj[compName];
+        const comp = obj.components[compName];
         if (!comp) {
           return;
         }
@@ -63,7 +63,7 @@ define(() => {
       function updateObjKeys(objId) {
         const obj = sceneObjects[objId];
         const updateObjCompKeys = updateCompKeys.bind(this, obj);
-        Object.keys(obj).forEach(updateObjCompKeys);
+        Object.keys(obj.components).forEach(updateObjCompKeys);
       }
 
       Object.keys(sceneObjects).forEach(updateObjKeys);

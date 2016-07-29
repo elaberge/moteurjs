@@ -21,21 +21,21 @@ define(['require', 'components/parent'], (require, ParentComponent) => {
             return Promise.reject(new Error('Impossible de trouver l\'enfant'));
           }
 
-          if (child.parent && child.parent.parent && child.parent.parent !== owner) {
+          if (child.components.parent && child.components.parent.parent && child.components.parent.parent !== owner) {
             return Promise.reject(new Error('Parent already set'));
           }
 
           let p = Promise.resolve();
 
-          if (!child.parent) {
+          if (!child.components.parent) {
             const createParent = ParentComponent.create.bind(ParentComponent, sceneManager, child);
             p = p.then(createParent)
               .then((comp) => {
-                child.parent = comp;
+                child.components.parent = comp;
               });
           }
           p = p.then(() => {
-            return child.parent.onLoad(owner);
+            return child.components.parent.onLoad(owner);
           });
 
           children.add(child);

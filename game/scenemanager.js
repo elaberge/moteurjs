@@ -1,7 +1,9 @@
 define(['scenefactory'], (SceneFactory) => {
   'use strict';
 
-  return function(sceneFactory = new SceneFactory(this)) {
+  return function(deferredSceneFactory = false) {
+    let sceneFactory = undefined;
+
     let sceneObjects = {};
     const nameMap = {};
     let nextObjId = 1;
@@ -19,7 +21,7 @@ define(['scenefactory'], (SceneFactory) => {
       const updateCalls = [];
 
       function updateComp(obj, compName) {
-        const comp = obj[compName];
+        const comp = obj.components[compName];
         if (comp && comp.update) {
           updateCalls.push(comp.update(delta));
         }
@@ -28,7 +30,7 @@ define(['scenefactory'], (SceneFactory) => {
       function updateObj(objId) {
         const obj = sceneObjects[objId];
         const updateObjComp = updateComp.bind(this, obj);
-        Object.keys(obj).forEach(updateObjComp);
+        Object.keys(obj.components).forEach(updateObjComp);
       }
 
       Object.keys(sceneObjects).forEach(updateObj);
@@ -54,11 +56,9 @@ define(['scenefactory'], (SceneFactory) => {
     this.addObject = function(obj) {
       const id = nextObjId++;
       sceneObjects[id] = obj;
-      const nameComp = obj.name;
-      if (nameComp) {
-        nameMap[nameComp.name] = nameMap[nameComp.name] || new Set();
-        nameMap[nameComp.name].add(id);
-      }
+      const name = obj.name;
+      nameMap[name] = nameMap[name] || new Set();
+      nameMap[name].add(id);
       return id;
     };
 
@@ -97,5 +97,16 @@ define(['scenefactory'], (SceneFactory) => {
         return sceneObjects;
       },
     });
+
+    // Pour les tests unitaires
+    if (deferredSceneFactory) {
+      Object.defineProperty(this, 'sceneFactory', {
+        set: function(factory) {
+          sceneFactory = factory;
+        },
+      });
+    } else {
+      sceneFactory = new SceneFactory(this);
+    }
   };
 });

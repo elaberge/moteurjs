@@ -5,7 +5,7 @@ env:
 extends: 'eslint:recommended'
 rules:
   indent:
-    - warn
+    - off
     - 2
     - SwitchCase: 1
   linebreak-style:

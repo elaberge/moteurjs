@@ -1,14 +1,43 @@
-define(['testutils', 'objectfactory'], (utils, ObjectFactory) => {
+define([
+  'testutils',
+  'objectfactory',
+], (
+  utils,
+  ObjectFactory
+) => {
   'use strict';
 
   const expect = utils.expect;
   const delayPromise = utils.delayPromise;
 
   describe('Fabrique d\'objets', () => {
+    const componentTemplate = () => {
+      return {
+        create: function(sceneManager, owner, descr) {
+          return delayPromise(10)
+            .then(() => {
+              return {
+                owner: owner,
+                descr: descr,
+              };
+            });
+        }
+      };
+    };
+
+    define('components/test-ofactory', [], componentTemplate);
+    define('components/test-ofactory2', [], componentTemplate);
+
     it('peut être instanciée', () => {
       const factory = new ObjectFactory({});
       expect(factory).instanceof(ObjectFactory);
     });
+
+    function createTestObject(descr) {
+      descr = descr || {};
+      const factory = new ObjectFactory({});
+      return factory.create(descr);
+    }
 
     describe('Fonction "create"', () => {
       it('existe', () => {
@@ -22,30 +51,54 @@ define(['testutils', 'objectfactory'], (utils, ObjectFactory) => {
         check: function(factory) {
           return factory.create(this.descr)
             .then((obj) => {
-              expect(obj).an('object');
-              expect(obj).to.be.empty;
+              expect(obj).property('components');
+              expect(obj.components).an('object');
+              expect(obj.components).to.be.empty;
+            });
+        }
+      }, {
+        name: 'assigne un nom par défaut à l\'objet',
+        descr: {},
+        check: function(factory) {
+          return factory.create(this.descr)
+            .then((obj) => {
+              expect(obj).property('name');
+              expect(obj.name).a('string');
+              expect(obj.name).to.not.be.empty;
+            });
+        }
+      }, {
+        name: 'assigne un nom spécifié à l\'objet',
+        descr: {
+          name: 'patate'
+        },
+        check: function(factory) {
+          return factory.create(this.descr)
+            .then((obj) => {
+              expect(obj).property('name');
+              expect(obj.name).a('string');
+              expect(obj.name).equals(this.descr.name);
             });
         }
       }, {
         name: 'ajoute des composants depuis les descriptions',
         descr: {
-          first: 123,
-          second: 456,
+          'test-ofactory': 123,
+          'test-ofactory2': 456,
         },
         check: function(factory) {
           return factory.create(this.descr)
             .then((obj) => {
-              expect(obj).an('object');
-              expect(obj).have.keys(['first', 'second']);
-              expect(obj.first).deep.equals({
+              expect(obj).property('components');
+              expect(obj.components).an('object');
+              expect(obj.components).have.keys(['test-ofactory', 'test-ofactory2']);
+              expect(obj.components['test-ofactory']).deep.equals({
                 owner: obj,
-                name: 'first',
-                descr: this.descr.first
+                descr: this.descr['test-ofactory'],
               });
-              expect(obj.second).deep.equals({
+              expect(obj.components['test-ofactory2']).deep.equals({
                 owner: obj,
-                name: 'second',
-                descr: this.descr.second
+                descr: this.descr['test-ofactory2'],
               });
             });
         }
@@ -53,20 +106,7 @@ define(['testutils', 'objectfactory'], (utils, ObjectFactory) => {
 
       tests.forEach((t) => {
         it(t.name, (done) => {
-          const compFactory = {
-            create: (obj, compName, compDescr) => {
-              return delayPromise(10)
-                .then(() => {
-                  return {
-                    owner: obj,
-                    name: compName,
-                    descr: compDescr
-                  };
-                });
-            },
-          };
-
-          const factory = new ObjectFactory({}, compFactory);
+          const factory = new ObjectFactory({});
           t.check(factory)
             .then(done)
             .catch((err) => {

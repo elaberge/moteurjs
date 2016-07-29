@@ -1,4 +1,14 @@
-define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
+define([
+  'testutils',
+  'scenemanager',
+  'components/children',
+  'components/canvas2d',
+], (
+  utils,
+  SceneManager,
+  ChildrenComponent,
+  CanvasComponent
+) => {
   'use strict';
 
   const expect = utils.expect;
@@ -7,6 +17,24 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
 
   describe('Composant "Canvas2D"', () => {
     const canvasName = 'test canvas';
+
+    const componentTemplate = () => {
+      return {
+        create: function(sceneManager, owner, descr) {
+          return delayPromise(10)
+            .then(() => {
+              return {
+                owner: owner,
+                d: descr,
+                display: descr.display,
+              };
+            });
+        }
+      };
+    };
+
+    define('components/test-canvas2d', [], componentTemplate);
+
 
     describe('Fonction "getHTMLElement"', () => {
       it('existe', () => {
@@ -26,6 +54,7 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
         htmlTarget: canvasName
       };
       owner = owner || {};
+      owner.components = owner.components || {};
       log = log || [];
 
       CanvasComponent.getHTMLElement = function(id) {
@@ -128,7 +157,7 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
         const displayLog = [];
 
         function display(delta, ctx) {
-          displayLog.push(this.owner);
+          displayLog.push(this.owner.name);
           return delayPromise(10)
             .then(() => {
               this._delta = delta;
@@ -136,48 +165,50 @@ define(['testutils', 'components/canvas2d'], (utils, CanvasComponent) => {
             });
         }
 
-        const grandChild1 = {
+        const grandChild1Descr = {
           name: 'grandChild1',
-          test: {
+          'test-canvas2d': {
             display: display
           },
         };
-        const child1 = {
+        const child1Descr = {
           name: 'child1',
-          test: {
+          'test-canvas2d': {
             display: display
           },
-          children: {
-            children: [grandChild1]
-          },
+          children: [grandChild1Descr.name],
         };
-        const child2 = {
+        const child2Descr = {
           name: 'child2',
-          test: {
+          'test-canvas2d': {
             display: display
           },
         };
-        const obj = {
-          children: {
-            children: [child1, child2]
-          },
+        const objDescr = {
+          name: 'root',
+          children: [child1Descr.name, child2Descr.name],
         };
-        const expectedOrder = [child1, grandChild1, child2];
-        expectedOrder.forEach((o) => {
-          o.test.owner = o;
-        });
+        const expectedOrder = [child1Descr.name, grandChild1Descr.name, child2Descr.name];
+        const sceneDescr = [grandChild1Descr, child1Descr, child2Descr, objDescr];
 
         let context = undefined;
-        createTestCanvas(null, obj)
+
+        const mgr = new SceneManager();
+        mgr.loadScene(sceneDescr)
+          .then(() => {
+            const obj = mgr.findObject(objDescr.name);
+            return createTestCanvas(null, obj);
+          })
           .then((comp) => {
             context = comp.context;
             return comp.render(123);
           })
           .then(() => {
             expect(displayLog).deep.equals(expectedOrder);
-            expectedOrder.forEach((o) => {
-              expect(o.test._delta).equals(123);
-              expect(o.test._context).equals(context);
+            expectedOrder.forEach((name) => {
+              const o = mgr.findObject(name);
+              expect(o.components['test-canvas2d']._delta).equals(123);
+              expect(o.components['test-canvas2d']._context).equals(context);
             });
             done();
           })

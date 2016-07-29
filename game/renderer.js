@@ -11,7 +11,7 @@ define(() => {
       const renderCalls = [];
 
       function renderComp(obj, compName) {
-        const comp = obj[compName];
+        const comp = obj.components[compName];
         if (comp && comp.render) {
           renderCalls.push(comp.render(delta));
         }
@@ -20,7 +20,7 @@ define(() => {
       function renderObj(objId) {
         const obj = sceneObjects[objId];
         const renderObjComp = renderComp.bind(this, obj);
-        Object.keys(obj).forEach(renderObjComp);
+        Object.keys(obj.components).forEach(renderObjComp);
       }
 
       Object.keys(sceneObjects).forEach(renderObj);

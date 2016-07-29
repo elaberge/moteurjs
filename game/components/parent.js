@@ -18,16 +18,16 @@ define(['require', 'components/children'], (require, ChildrenComponent) => {
           let p = Promise.resolve();
 
           if (parent) {
-            if (!parent.children) {
+            if (!parent.components.children) {
               const createChildren = ChildrenComponent.create.bind(ChildrenComponent, sceneManager, parent);
               p = p.then(createChildren)
                 .then((comp) => {
-                  parent.children = comp;
+                  parent.components.children = comp;
                   return comp.onLoad();
                 });
             }
             p = p.then(() => {
-              return parent.children.add(owner);
+              return parent.components.children.add(owner);
             });
           }
 

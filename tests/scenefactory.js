@@ -1,10 +1,37 @@
-define(['testutils', 'scenefactory'], (utils, SceneFactory) => {
+define([
+  'testutils',
+  'objectfactory',
+  'scenemanager',
+  'scenefactory',
+], (
+  utils,
+  ObjectFactory,
+  SceneManager,
+  SceneFactory
+) => {
   'use strict';
 
   const expect = utils.expect;
   const delayPromise = utils.delayPromise;
 
   describe('Fabrique de scènes', () => {
+    const componentTemplate = () => {
+      return {
+        create: function(sceneManager, owner, descr) {
+          return delayPromise(10)
+            .then(() => {
+              return {
+                d: descr,
+                onLoad: descr.onLoad,
+                onInit: descr.onInit,
+              };
+            });
+        }
+      };
+    };
+
+    define('components/test-sfactory', [], componentTemplate);
+
     it('peut être instanciée', () => {
       const factory = new SceneFactory({});
       expect(factory).instanceof(SceneFactory);
@@ -23,40 +50,38 @@ define(['testutils', 'scenefactory'], (utils, SceneFactory) => {
         }, {
           name: 'b'
         }],
-        create: function(descr) {
-          return Promise.resolve({
-            name: descr.name
-          });
+        create: function(objFactoryCreate, descr) {
+          return objFactoryCreate(descr);
         },
         check: function(factory, sceneMgr) {
           return factory.append(this.descr)
             .then(() => {
-              const objects = sceneMgr.objects;
-              expect(objects).have.keys(['a', 'b']);
+              expect(Object.keys(sceneMgr.objects)).lengthOf(2);
+              expect(sceneMgr.findObject('a')).to.exist;
+              expect(sceneMgr.findObject('b')).to.exist;
             });
         }
       }, {
         name: 'appelle les méthodes de chargement et d\'initialisation, dans le bon ordre',
         descr: [{
-          test: 'patate'
+          'test-sfactory': {
+            a: 'patate',
+          },
         }],
         calls: [],
-        create: function(descr) {
+        create: function(objFactoryCreate, descr) {
           const calls = this.calls;
-          return Promise.resolve({
-            test: {
-              onLoad: function(d) {
-                expect(d).equals(descr.test);
-                calls.push('onLoad');
-                return delayPromise(10);
-              },
-              onInit: function(d) {
-                expect(d).equals(descr.test);
-                calls.push('onInit');
-                return delayPromise(10);
-              },
-            },
-          });
+          descr['test-sfactory'].onLoad = function(d) {
+            expect(d).equals(descr['test-sfactory']);
+            calls.push('onLoad');
+            return delayPromise(10);
+          };
+          descr['test-sfactory'].onInit = function(d) {
+            expect(d).equals(descr['test-sfactory']);
+            calls.push('onInit');
+            return delayPromise(10);
+          };
+          return objFactoryCreate(descr);
         },
         check: function(factory) {
           return factory.append(this.descr)
@@ -66,25 +91,26 @@ define(['testutils', 'scenefactory'], (utils, SceneFactory) => {
         }
       }, {
         name: 'appelle les méthodes de chargement de chaque objet avant celles d\'initialisation',
-        descr: [{}, {}],
+        descr: [{
+          'test-sfactory': {},
+        }, {
+          'test-sfactory': {},
+        }],
         loadCount: 0,
         initCount: 0,
-        create: function() {
+        create: function(objFactoryCreate, descr) {
           const self = this;
-          return Promise.resolve({
-            test: {
-              onLoad: function() {
-                expect(self.initCount).equals(0);
-                self.loadCount++;
-                return delayPromise(10);
-              },
-              onInit: function() {
-                expect(self.loadCount).equals(2);
-                self.initCount++;
-                return delayPromise(10);
-              },
-            },
-          });
+          descr['test-sfactory'].onLoad = function() {
+            expect(self.initCount).equals(0);
+            self.loadCount++;
+            return delayPromise(10);
+          };
+          descr['test-sfactory'].onInit = function() {
+            expect(self.loadCount).equals(2);
+            self.initCount++;
+            return delayPromise(10);
+          };
+          return objFactoryCreate(descr);
         },
         check: function(factory) {
           return factory.append(this.descr)
@@ -97,15 +123,13 @@ define(['testutils', 'scenefactory'], (utils, SceneFactory) => {
 
       tests.forEach((t) => {
         it(t.name, (done) => {
-          const sceneMgr = {
-            objects: {},
-            addObject: function(obj) {
-              this.objects[obj.name] = obj;
-            },
-          };
+          const mgr = new SceneManager(true);
+          const objFactory = new ObjectFactory(mgr);
+          const objFactoryCreate = objFactory.create.bind(objFactory);
+          objFactory.create = t.create.bind(t, objFactoryCreate);
+          const factory = new SceneFactory(mgr, objFactory);
 
-          const factory = new SceneFactory(sceneMgr, t);
-          t.check(factory, sceneMgr)
+          t.check(factory, mgr)
             .then(done)
             .catch((err) => {
               done(err || new Error('Erreur'));

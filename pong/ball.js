@@ -12,9 +12,9 @@ define(() => {
       let dY = 1;
 
       function checkCollision(player, other) {
-        const transform = owner.transform;
+        const transform = owner.components.transform;
         const halfHeight = transform.height / 2;
-        const playerTransform = player.transform;
+        const playerTransform = player.components.transform;
         const playerHalfHeight = playerTransform.height / 2;
 
         dX *= -1;
@@ -23,7 +23,7 @@ define(() => {
           (transform.y + halfHeight < playerTransform.y - playerHalfHeight)) {
           transform.x = defaultX;
           transform.y = defaultY;
-          other['pong/player'].score();
+          other.components['pong/player'].score();
         }
       }
 
@@ -36,14 +36,14 @@ define(() => {
         onInit: function(descr) {
           player1 = sceneManager.findObject(descr.player1);
           player2 = sceneManager.findObject(descr.player2);
-          defaultX = owner.transform.x;
-          defaultY = owner.transform.y;
+          defaultX = owner.components.transform.x;
+          defaultY = owner.components.transform.y;
           return Promise.resolve();
         },
 
         update: function(dT) {
-          const canvasTransform = sceneManager.findObject('canvas').transform;
-          const transform = owner.transform;
+          const canvasTransform = sceneManager.findObject('canvas').components.transform;
+          const transform = owner.components.transform;
           const halfHeight = transform.height / 2;
           const halfWidth = transform.width / 2;
 
@@ -59,10 +59,10 @@ define(() => {
             dY *= -1;
           }
 
-          if (transform.x - halfWidth < player1.transform.x + player1.transform.width / 2) {
+          if (transform.x - halfWidth < player1.components.transform.x + player1.components.transform.width / 2) {
             checkCollision(player1, player2);
           }
-          if (transform.x + halfWidth > player2.transform.x - player2.transform.width / 2) {
+          if (transform.x + halfWidth > player2.components.transform.x - player2.components.transform.width / 2) {
             checkCollision(player2, player1);
           }
 
