@@ -15,4 +15,5 @@ define([
   'tests/components/text2d',
   'tests/components/audiolistener.js',
   'tests/components/audiooscillator.js',
+  'tests/components/audiofile.js',
 ]);
