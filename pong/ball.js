@@ -24,6 +24,8 @@ define(() => {
           transform.x = defaultX;
           transform.y = defaultY;
           other.components['pong/player'].score();
+        } else {
+          player.components.audiooscillator.beep(0.1);
         }
       }
 

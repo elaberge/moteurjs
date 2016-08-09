@@ -8,7 +8,8 @@
     "canvas2d": {
       "htmlTarget": "canvas",
       "background": "#000"
-    }
+    },
+    "audiolistener": {}
   },
   {
     "name": "background",
@@ -58,6 +59,10 @@
       "down": "KeyS",
       "speed": 200,
       "score": "score1"
+    },
+    "audiooscillator": {
+      "type": "square",
+      "frequency": 262
     }
   },
   {
@@ -78,6 +83,10 @@
       "down": "ArrowDown",
       "speed": 200,
       "score": "score2"
+    },
+    "audiooscillator": {
+      "type": "square",
+      "frequency": 440
     }
   },
   {

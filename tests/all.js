@@ -13,4 +13,6 @@ define([
   'tests/components/canvas2d',
   'tests/components/shape2d',
   'tests/components/text2d',
+  'tests/components/audiolistener.js',
+  'tests/components/audiooscillator.js',
 ]);
