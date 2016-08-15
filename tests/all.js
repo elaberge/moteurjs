@@ -6,6 +6,7 @@ define([
   'tests/objectfactory',
   'tests/renderer',
   'tests/inputmanager',
+  'tests/networkmanager',
   'tests/componentfactory',
   'tests/components/parent',
   'tests/components/children',
