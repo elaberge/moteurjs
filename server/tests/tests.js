@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const mocha = new Mocha();
-const testDir = path.join(__dirname, 'tests');
+const testDir = __dirname;
 
 fs.readdirSync(testDir).filter(function(file) {
   return file.substr(-3) === '.js';

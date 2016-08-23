@@ -2,9 +2,9 @@
 
 const PORT = 8081;
 
-const HttpServer = require('./httpserver');
-const FileProvider = require('./fileprovider');
-const WebSocket = require('./websocket');
+const HttpServer = require('../httpserver');
+const FileProvider = require('../fileprovider');
+const WebSocket = require('../websocket');
 
 const server = new HttpServer();
 new FileProvider(__dirname, server);
