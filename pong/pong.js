@@ -2,7 +2,7 @@
   'use strict';
 
   require.config({
-    baseUrl: 'game',
+    baseUrl: '../game',
     paths: {
       json: '../lib/require/json',
       text: '../lib/require/text',
