@@ -10,7 +10,7 @@
     },
     config: {
       main: {
-        baseScene: '../scenes/pong.json'
+        baseScene: '../pong/pong.json'
       }
     },
     packages: ['components/pong']
