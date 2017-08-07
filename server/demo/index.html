@@ -1,6 +1,67 @@
 <!DOCTYPE html>
 <html>
-    <body>
-      Hello
-    </body>
+
+<head>
+  <meta charset="UTF-8">
+  <style>
+    button {
+      display: block;
+    }
+
+    textarea {
+      display: block;
+      width: 50%;
+      height: 500px;
+    }
+  </style>
+</head>
+
+<body>
+  Démo de serveur
+
+  <button onclick="connect();">Connexion</button>
+  <button onclick="disconnect();">Déconnexion</button>
+  <button onclick="message('hello!')">Envoyer un message</button>
+
+  <textarea id="log"></textarea>
+
+  <script>
+    const wsUri = `ws://${location.hostname}${location.port ? ':'+location.port: ''}`;
+    const logArea = document.getElementById('log');
+    let ws = undefined;
+    console.log(wsUri);
+
+    function log(type, msg) {
+      console.log(type, msg);
+      logArea.innerHTML += type + ": " + msg + '\n';
+    }
+
+    function connect() {
+      ws = new WebSocket(wsUri);
+      ws.onopen = (evt) => {
+        log("open", evt.returnValue);
+      }
+      ws.onclose = (evt) => {
+        log("close", evt.returnValue);
+      }
+      ws.onmessage = (evt) => {
+        log("message", evt.data);
+      }
+      ws.onerror = (evt) => {
+        log("error", evt);
+      }
+    }
+
+    function disconnect() {
+      ws.close();
+      delete ws;
+    }
+
+    function message(msg) {
+      ws.send(msg);
+    }
+  </script>
+
+</body>
+
 </html>

@@ -12,14 +12,15 @@ const ws = new WebSocket(server);
 
 ws.onConnection = function(connection) {
   console.log('Nouvelle connexion de ' + connection.id);
+  setTimeout(()=>connection.send('Message!'), 3000);
 };
 
 ws.onMessage = function(connection, evt) {
-  console.log('Message de ' + connection.id, evt);
+  console.log('Message de ' + connection.id, evt.data);
 };
 
 ws.onClose = function(connection, evt) {
-  console.log('Fermeture de ' + connection.id, evt);
+  console.log('Fermeture de ' + connection.id, evt.reason);
 };
 
 server.listen(PORT)
