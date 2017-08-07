@@ -1,9 +1,29 @@
 {
+  "license": "LGPL-3.0",
   "dependencies": {
     "ws": "^1.1.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^3.0.2"
-  }
+  },
+  "name": "moteurjs",
+  "version": "1.0.0",
+  "description": "Moteur de jeu en JavaScript à vocation pédagogique (serveur)",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "node tests/tests.js"
+  },
+  "author": "Eric Laberge <e.laberge@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elaberge/moteurjs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/elaberge/moteurjs/issues"
+  },
+  "homepage": "https://github.com/elaberge/moteurjs#readme",
+  "private": true
 }
